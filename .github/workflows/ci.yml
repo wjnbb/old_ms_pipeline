@@ -1,0 +1,73 @@
+name: "Mass Spec Pipeline CI v1"
+
+# details which conditions the CI should run i.e. 
+# on pull-request, and midnight everyday
+on:
+  pull_request:
+    branches:
+      - "*"
+
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  build-and-test: # names the job "build-and-test"
+    
+    # MacOS and Windows cost more to run on GitHub CI hence ubuntu is used
+    runs-on: ubuntu-latest 
+
+    # sets default shell
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+      - uses: actions/checkout@v3
+
+        # sets up conda environment in a way that can be cached, and retrieved from cache
+      - name: Setup Condaforge
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: ms-pipeline
+          auto-activate-base: false
+          use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
+
+        # actual cache itself and key to accessing specific cache
+      - name: Cache conda envs
+        id: cache
+        uses: actions/cache@v2
+        env:
+          # Increase this value to manually reset cache if requirements has not changed
+          CACHE_NUMBER: 0
+        with:
+          path: |
+            /usr/share/miniconda/envs/ms-pipeline
+
+          # key updates whenever theres a change to requirements, or day to day
+          # change can also be forced by changing the CACHE_NUMBER
+          key: conda-${{ runner.os }}--${{ runner.arch }}-${{ hashFiles('requirements.txt') }}-${{ hashFiles('requirements-pip.txt') }}-${{ hashFiles('requirements-R.txt') }}-${{ env.DATE }}-${{ env.CACHE_NUMBER }}
+
+        # Runs installation script when cache does not exist or when no requirements are loaded from cache
+      - name: Run install script
+        # Only need to run install when deps has been changed
+        if: steps.conda.outputs.cache-hit != 'true'
+        run: |
+          ./scripts/install.sh
+
+        # runs all CI workflows that were present in the first version
+      - name: Sort python imports with isort
+        run: |
+          isort . -c
+
+      - name: Lint python files with black
+        run: |
+          black . --check
+
+      - name: Lint R files with styler
+        run: |
+          Rscript -e 'styler::style_dir(dry = "fail")'
+
+      - name: Run python unit tests with pytest
+        run: |
+          pytest
+          

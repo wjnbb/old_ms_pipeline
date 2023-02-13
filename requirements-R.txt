@@ -1,0 +1,4 @@
+# minor version pins
+r-base==4.1.*
+r-dplyr==1.0.*
+r-styler==1.7.*
