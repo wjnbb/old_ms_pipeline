@@ -12,7 +12,12 @@ from src.assign_global_variables import (
 
 def avg_sd_rsd(df, groups, grp_names):
 
+    if(df.empty):
+        all_stats = pd.DataFrame()
+        return all_stats
+
     # checks if the group is made of many subgroups each requiring their own average or if the group is all one
+
     if isinstance(groups, list):
 
         all_stats = pd.DataFrame()
