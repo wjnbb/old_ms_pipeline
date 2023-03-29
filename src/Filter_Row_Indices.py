@@ -3,6 +3,10 @@ import pandas as pd
 
 def single_table_filt(filt_indices, df):
 
+    if (df.empty):
+        filt_df = pd.DataFrame()
+        return filt_df
+
     filt_df = df.loc[
         filt_indices,
     ]
