@@ -12,7 +12,7 @@ from src.assign_global_variables import (
 
 def avg_sd_rsd(df, groups, grp_names):
 
-    if(df.empty):
+    if df.empty:
         all_stats = pd.DataFrame()
         return all_stats
 

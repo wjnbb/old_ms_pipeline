@@ -64,6 +64,7 @@ def export_PT_w_norm(
 
     PT_output.save()
 
+
 def export_PT(
     module_tables,
     FC_Stats,
@@ -71,7 +72,7 @@ def export_PT(
     Media_stats,
     QC_stats,
     Blank_stats,
-    group_heights
+    group_heights,
 ):
 
     # Make the filtered data frame output
