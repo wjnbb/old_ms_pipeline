@@ -8,6 +8,8 @@ def blank_filter(Bio_stats, Media_stats, QC_stats, Blank_stats):
     all_stats = pd.concat([Bio_stats, Media_stats, QC_stats], axis=1)
     all_stats = all_stats[[s for s in all_stats.columns if "avg" in s]]
 
+    Blank_stats['Blank_avg'] = Blank_stats['Blank_avg'].fillna(10)
+
     B_FC_table = pd.DataFrame()
 
     # calculate FC against the blank average for all AS23/media triplicates
