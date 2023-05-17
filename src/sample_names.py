@@ -6,6 +6,4 @@ def get_sample_names(height_df):
     sample_names_full = [name.split(":")[1] for name in height_df.columns]
     sample_names = [name.split("-")[1] for name in sample_names_full]
 
-    print(sample_names[0:10])
-
     return sample_names
