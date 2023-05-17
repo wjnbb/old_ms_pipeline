@@ -5,8 +5,6 @@ def divide_mzmine3_table(peak_table, pt_cols):
 
     # divide different sections of mzmine3 table into the processing modules they originate from by matching the prefix in the column headers
     # Get the aligned feature info into one data frame
-    print("printing pt_cols")
-    print(pt_cols[0:10])
     aligned_feature_info = peak_table[(c for c in pt_cols if ":" not in c)]
     rt_range_cols = peak_table[(c for c in pt_cols if c.startswith("rt_range:"))]
     mz_range_cols = peak_table[(c for c in pt_cols if c.startswith("mz_range:"))]
@@ -40,7 +38,7 @@ def divide_mzmine3_table(peak_table, pt_cols):
     sample_cols = list(sample_data.columns)
     height_df = sample_data[(s for s in sample_cols if s.endswith(":height"))]
 
-    print("completed mzmine3 peak table dividing")
+    print("completed MZMine3 peak table dividing")
 
     return (
         MS1_match_data,
