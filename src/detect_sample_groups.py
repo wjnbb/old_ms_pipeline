@@ -10,6 +10,11 @@ from src.assign_global_variables import (
 
 def detect_sample_groups(sample_names):
 
+    print("Biological sample identifier used is...." +  Bio_identifier)
+    print("Media or control sample identifier used is...." + Media_identifier)
+    print("Blank sample identifier used is...." + Blank_identifier)
+    print("QC sample identifier used is...." + QC_identifier)
+
     # get all biological sample names from list of sample names
     if (len([s for s in sample_names if Bio_identifier in s])) >= 1:
 
