@@ -1,6 +1,6 @@
 import pandas as pd
 
-from assign_global_variables import Blank_thresh
+from src.assign_global_variables import Blank_thresh
 
 
 def blank_filter(
@@ -24,7 +24,6 @@ def blank_filter(
     # calculate FC against the blank average for all AS23/media triplicates
     for b in all_stats.columns:
 
-        print(b)
         bios = all_stats[[s for s in all_stats.columns if b in s]]
         bios = bios.squeeze()
         B_FC = bios / (Blank_stats["Blank_avg"].squeeze())
@@ -38,7 +37,9 @@ def blank_filter(
 
             Blank_i_filt.append(r)
 
+    print("")
     print(str(len(Blank_i_filt)) + " features left after blank filtering")
+    print("")
     print(
         str((len(Blank_i_filt) / len(all_stats)) * 100)
         + " % of features left after blank filtering"
