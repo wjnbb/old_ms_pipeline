@@ -8,7 +8,7 @@ def read_mzmine3_peaktable(path, raw_peak_table):
     # Read in thee MZMine3 peak table
 
     # list all files within the directory
-    print(path)
+    print("current working directory is...\n" + path)
 
     # change the working directory
     os.chdir(path)

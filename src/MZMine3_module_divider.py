@@ -38,7 +38,7 @@ def divide_mzmine3_table(peak_table, pt_cols):
     sample_cols = list(sample_data.columns)
     height_df = sample_data[(s for s in sample_cols if s.endswith(":height"))]
 
-    print("completed MZMine3 peak table dividing")
+    print("\ncompleted MZMine3 peak table dividing")
 
     return (
         MS1_match_data,
