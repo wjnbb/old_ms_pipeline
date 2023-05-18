@@ -1,15 +1,6 @@
 import pandas as pd
 
-from assign_global_variables import Bio_identifier, Media_identifier, bio_media_linkers
-
-#bio_media_linkers = ["P1FrC8", "P1Load"]
-
-#bio_media_linkers[bio_media_linkers]
-
-#Bio_groups = sample_groups[4]
-#sample_groups[5]
-
-#b = bio_media_pairs[0]
+from src.assign_global_variables import Bio_identifier, bio_media_linkers
 
 def FC_MultiBio_vs_MultiControl(Bio_groups, Bio_stats, Media_stats):
 
@@ -39,7 +30,6 @@ def FC_MultiBio_vs_MultiControl(Bio_groups, Bio_stats, Media_stats):
                     medias = Media_stats[medias].squeeze()
 
                     FC = bios / medias
-                    print(FC[0:10])
 
                     FC_table.insert(0, ("FC" + b), FC)
 
@@ -50,7 +40,6 @@ def FC_MultiBio_vs_MultiControl(Bio_groups, Bio_stats, Media_stats):
             medias = Media_stats[medias].squeeze()
 
             FC = bios / medias
-            print(FC[0:10])
             FC_table.insert(0, ("FC" + b), FC)
 
     return FC_table
