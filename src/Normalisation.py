@@ -3,7 +3,9 @@ import pandas as pd
 from assign_global_variables import Bio_identifier, Media_identifier, QC_identifier
 
 
-def QC_normalisation(QC_stats: pd.DataFrame, Bio_stats: pd.DataFrame, Media_stats: pd.DataFrame):
+def QC_normalisation(
+    QC_stats: pd.DataFrame, Bio_stats: pd.DataFrame, Media_stats: pd.DataFrame
+):
 
     """Takes Pandas dataframes of peak height stats for QC, biological and media/control sample groups. Biological and
     media/control feature height averages are divided by the QC average height for that feature to generate a QC

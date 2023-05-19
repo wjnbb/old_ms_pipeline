@@ -1,7 +1,9 @@
 import pandas as pd
 
 
-def get_group_heights(height_df: pd.DataFrame, Bio: list, Media: list, Blanks: list, QCs: list):
+def get_group_heights(
+    height_df: pd.DataFrame, Bio: list, Media: list, Blanks: list, QCs: list
+):
 
     """Takes a MZMine3 peak height Pandas dataframe and lists of the samples contained within the biological,
     media/control, blank and QC sample groups. Returns a tuple of four Pandas dataframes dividing the peak height data

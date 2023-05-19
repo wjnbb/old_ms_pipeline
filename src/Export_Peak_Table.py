@@ -15,10 +15,10 @@ def export_PT_w_norm(
 ):
 
     """Takes the list of MZMine3 processing module Pandas dataframes, fold change stats dataframe, biological, media/control,
-QC and blank peak height stats dataframes, raw peak height data and normalised peak height data and exports it to a
-.xlsx file. Data is separated out into different sheets with key data from some of the MZMine3 processing modules
-collated into the first sheet. Each processing module from MZMine has the complete data in its own tab. The file is
-saved into the current working directory."""
+    QC and blank peak height stats dataframes, raw peak height data and normalised peak height data and exports it to a
+    .xlsx file. Data is separated out into different sheets with key data from some of the MZMine3 processing modules
+    collated into the first sheet. Each processing module from MZMine has the complete data in its own tab. The file is
+    saved into the current working directory."""
 
     # Make the filtered data frame output
     # combine all the key_data columns from relevant tables into one data frame for sheet1
@@ -78,7 +78,7 @@ def export_PT(
     Media_stats: pd.DataFrame,
     QC_stats: pd.DataFrame,
     Blank_stats: pd.DataFrame,
-    group_heights: tuple[pd.DataFrame]
+    group_heights: tuple[pd.DataFrame],
 ):
 
     """Takes the list of MZMine3 processing module Pandas dataframes, fold change stats dataframe, biological, media/control,
@@ -132,6 +132,7 @@ def export_PT(
     heights.to_excel(PT_output, "Raw Peak Heights")
 
     PT_output.save()
+
 
 def export_PT_noFC(
     module_tables,
@@ -187,5 +188,3 @@ def export_PT_noFC(
     heights.to_excel(PT_output, "Raw Peak Heights")
 
     PT_output.save()
-
-

@@ -10,9 +10,9 @@ def blank_filter(
     Blank_stats: pd.DataFrame,
 ) -> list:
     """
-    Takes the peak height stats (avg, sd, rsd) calculated for each sample group and identifies all feature rows for which no
-biological, media or QC sample average height in the dataset exceeded a minimum FC as specified by the Blank_thresh
-variable versus the average height of the blank samples and returns a list of the indices of those rows."
+        Takes the peak height stats (avg, sd, rsd) calculated for each sample group and identifies all feature rows for which no
+    biological, media or QC sample average height in the dataset exceeded a minimum FC as specified by the Blank_thresh
+    variable versus the average height of the blank samples and returns a list of the indices of those rows."
     """
 
     all_stats = pd.concat([Bio_stats, Media_stats, QC_stats], axis=1)

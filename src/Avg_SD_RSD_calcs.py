@@ -1,5 +1,6 @@
-import pandas as pd
 from typing import Union
+
+import pandas as pd
 
 from src.assign_global_variables import (
     Bio_identifier,
@@ -8,12 +9,13 @@ from src.assign_global_variables import (
     QC_identifier,
 )
 
+
 def avg_sd_rsd(df: pd.DataFrame, groups: Union[list, str], grp_names: list):
 
     """Takes the peak height Pandas dataframe for a sample group (Biolgical, Media/Control, Blank or QC), the group identifier
-(for blanks and QCs) or list of subgroups (for biological or media/controls) as well as the list of all samples names
-in the group. The peak height average, standard deviation and relative standard deviation are calculated for each feature
-in each group/subgroup. Returns a Pandas dataframe containing all calculated statistics for the group."""
+    (for blanks and QCs) or list of subgroups (for biological or media/controls) as well as the list of all samples names
+    in the group. The peak height average, standard deviation and relative standard deviation are calculated for each feature
+    in each group/subgroup. Returns a Pandas dataframe containing all calculated statistics for the group."""
 
     if df.empty:
         all_stats = pd.DataFrame()

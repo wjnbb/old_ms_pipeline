@@ -21,7 +21,7 @@ def module_tables_filt(
     filt_indices: list, module_tables: tuple[pd.DataFrame]
 ) -> list[pd.DataFrame]:
 
-    """ Takes a list of row indices and a tuple of Pandas dataframes and filters by row using the indices for each
+    """Takes a list of row indices and a tuple of Pandas dataframes and filters by row using the indices for each
     dataframe within the tuple. Returns a tuple of row filtered Pandas dataframes."""
 
     module_table_filt = list()

@@ -2,7 +2,10 @@ import pandas as pd
 
 from src.assign_global_variables import Bio_identifier, bio_media_linkers
 
-def FC_MultiBio_vs_MultiControl(Bio_groups: list, Bio_stats: pd.DataFrame, Media_stats: pd.DataFrame) -> pd.DataFrame:
+
+def FC_MultiBio_vs_MultiControl(
+    Bio_groups: list, Bio_stats: pd.DataFrame, Media_stats: pd.DataFrame
+) -> pd.DataFrame:
 
     """Takes a list of multiple biological sample groups, the average peak height stats for biological sample groups and
     media/control sample group as separate Pandas dataframes. The supplied bio_media_linkers list ensures linking of the
@@ -24,11 +27,11 @@ def FC_MultiBio_vs_MultiControl(Bio_groups: list, Bio_stats: pd.DataFrame, Media
 
         medias = [i for i in Media_stats.columns if b in i]
 
-        if(len(medias) == 0):
+        if len(medias) == 0:
 
             for L in bio_media_linkers:
 
-                if(L in b):
+                if L in b:
 
                     medias = [i for i in Media_stats.columns if L in i]
                     medias = [i for i in medias if "avg" in i]
@@ -37,7 +40,6 @@ def FC_MultiBio_vs_MultiControl(Bio_groups: list, Bio_stats: pd.DataFrame, Media
                     FC = bios / medias
 
                     FC_table.insert(0, ("FC" + b), FC)
-
 
         else:
 
@@ -50,11 +52,13 @@ def FC_MultiBio_vs_MultiControl(Bio_groups: list, Bio_stats: pd.DataFrame, Media
     return FC_table
 
 
-def FC_MultiBio_vs_SingleControl(Bio_groups: list, Bio_stats: pd.DataFrame, Control_stats: pd.DataFrame) -> pd.DataFrame:
+def FC_MultiBio_vs_SingleControl(
+    Bio_groups: list, Bio_stats: pd.DataFrame, Control_stats: pd.DataFrame
+) -> pd.DataFrame:
 
     """Takes a list of multiple biological sample groups, the average peak height stats for biological sample groups and
     media/control sample group as separate Pandas dataframes. Returns a Pandas dataframe of the fold changes for the
-    multiple biological groups average peak height vs the single control/media group average peak height. """
+    multiple biological groups average peak height vs the single control/media group average peak height."""
 
     ################################################################################
     # CALCULATE FC FOR EACH BIOLOGICAL WELL VS ITS MEDIA CONTROL
@@ -78,7 +82,9 @@ def FC_MultiBio_vs_SingleControl(Bio_groups: list, Bio_stats: pd.DataFrame, Cont
     return FC_table
 
 
-def FC_SingleBio_vs_SingleControl(Bio_stats: pd.DataFrame, Media_stats: pd.DataFrame) -> pd.DataFrame:
+def FC_SingleBio_vs_SingleControl(
+    Bio_stats: pd.DataFrame, Media_stats: pd.DataFrame
+) -> pd.DataFrame:
 
     """Takes a Pandas dataframe of the biological sample group peak height stats and another of the media/control group peak
     height stats. Returns a Pandas dataframe of the FC of the average biological sample peak height vs the average
