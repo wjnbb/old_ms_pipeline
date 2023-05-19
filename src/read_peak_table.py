@@ -3,9 +3,12 @@ import os
 import pandas as pd
 
 
-def read_mzmine3_peaktable(path, raw_peak_table):
+def read_mzmine3_peaktable(path: str, raw_peak_table: str):
 
-    # Read in thee MZMine3 peak table
+    """"Takes a string filepath (path) and string filename (raw_peak_table) of a csv MZMine3 peak table this and returns
+     it as a Pandas dataframe after setting the row indices to the row/feature ID numbers exported by MZMine3 """
+
+    # Read in the MZMine3 peak table
 
     # list all files within the directory
     print("current working directory is...\n" + path)

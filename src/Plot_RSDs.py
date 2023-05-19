@@ -6,7 +6,8 @@ from src.assign_global_variables import path
 def plot_rsd_vs_rt(Bio_stats: pd.DataFrame, Media_stats: pd.DataFrame, QC_stats: pd.DataFrame, peak_info: pd.DataFrame):
 
     """Creates a simple scatter plot for each sample group in the dataset of the feature RSD vs RT to assess feature
-    reproducibility across the chromatogram """
+    reproducibility across the chromatogram. A new directory is made within the working directory to save the plots into.
+    """
 
     #extract all RTs as a series
     RT = peak_info[["rt"]].squeeze()

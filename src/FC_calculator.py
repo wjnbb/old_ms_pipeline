@@ -2,7 +2,12 @@ import pandas as pd
 
 from src.assign_global_variables import Bio_identifier, bio_media_linkers
 
-def FC_MultiBio_vs_MultiControl(Bio_groups, Bio_stats, Media_stats):
+def FC_MultiBio_vs_MultiControl(Bio_groups: list, Bio_stats: pd.DataFrame, Media_stats: pd.DataFrame) -> pd.DataFrame:
+
+    """Takes a list of multiple biological sample groups, the average peak height stats for biological sample groups and
+    media/control sample group as separate Pandas dataframes. The supplied bio_media_linkers list ensures linking of the
+    correct biological group to the relevant media/control group. Returns a Pandas dataframe of the fold changes for the
+    multiple biological groups average peak height vs the partner control/media group average peak height."""
 
     ################################################################################
     # CALCULATE FC FOR EACH BIOLOGICAL WELL VS ITS MEDIA CONTROL
@@ -45,7 +50,12 @@ def FC_MultiBio_vs_MultiControl(Bio_groups, Bio_stats, Media_stats):
     return FC_table
 
 
-def FC_MultiBio_vs_SingleControl(Bio_groups, Bio_stats, Control_stats):
+def FC_MultiBio_vs_SingleControl(Bio_groups: list, Bio_stats: pd.DataFrame, Control_stats: pd.DataFrame) -> pd.DataFrame:
+
+    """Takes a list of multiple biological sample groups, the average peak height stats for biological sample groups and
+    media/control sample group as separate Pandas dataframes. Returns a Pandas dataframe of the fold changes for the
+    multiple biological groups average peak height vs the single control/media group average peak height. """
+
     ################################################################################
     # CALCULATE FC FOR EACH BIOLOGICAL WELL VS ITS MEDIA CONTROL
     # get character strings to allow pairing of relevant biological and media samples
@@ -68,7 +78,11 @@ def FC_MultiBio_vs_SingleControl(Bio_groups, Bio_stats, Control_stats):
     return FC_table
 
 
-def FC_SingleBio_vs_SingleControl(Bio_stats, Media_stats):
+def FC_SingleBio_vs_SingleControl(Bio_stats: pd.DataFrame, Media_stats: pd.DataFrame) -> pd.DataFrame:
+
+    """Takes a Pandas dataframe of the biological sample group peak height stats and another of the media/control group peak
+    height stats. Returns a Pandas dataframe of the FC of the average biological sample peak height vs the average
+    media/control sample peak height."""
 
     ################################################################################
     # CALCULATE FC for a single biological group vs a single media/control group

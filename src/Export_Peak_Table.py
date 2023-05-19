@@ -4,15 +4,21 @@ from src.assign_global_variables import batch_name
 
 
 def export_PT_w_norm(
-    module_tables,
-    FC_Stats,
-    Bio_stats,
-    Media_stats,
-    QC_stats,
-    Blank_stats,
-    group_heights,
-    norm_heights,
+    module_tables: list[pd.DataFrame],
+    FC_Stats: pd.DataFrame,
+    Bio_stats: pd.DataFrame,
+    Media_stats: pd.DataFrame,
+    QC_stats: pd.DataFrame,
+    Blank_stats: pd.DataFrame,
+    group_heights: tuple[pd.DataFrame],
+    norm_heights: tuple[pd.DataFrame],
 ):
+
+    """Takes the list of MZMine3 processing module Pandas dataframes, fold change stats dataframe, biological, media/control,
+QC and blank peak height stats dataframes, raw peak height data and normalised peak height data and exports it to a
+.xlsx file. Data is separated out into different sheets with key data from some of the MZMine3 processing modules
+collated into the first sheet. Each processing module from MZMine has the complete data in its own tab. The file is
+saved into the current working directory."""
 
     # Make the filtered data frame output
     # combine all the key_data columns from relevant tables into one data frame for sheet1
@@ -66,14 +72,19 @@ def export_PT_w_norm(
 
 
 def export_PT(
-    module_tables,
-    FC_Stats,
-    Bio_stats,
-    Media_stats,
-    QC_stats,
-    Blank_stats,
-    group_heights,
+    module_tables: list[pd.DataFrame],
+    FC_Stats: pd.DataFrame,
+    Bio_stats: pd.DataFrame,
+    Media_stats: pd.DataFrame,
+    QC_stats: pd.DataFrame,
+    Blank_stats: pd.DataFrame,
+    group_heights: tuple[pd.DataFrame]
 ):
+
+    """Takes the list of MZMine3 processing module Pandas dataframes, fold change stats dataframe, biological, media/control,
+    QC and blank peak height stats dataframes and raw peak height data and exports it to a .xlsx file. Data is separated out
+    into different sheets with key data from some of the MZMine3 processing modules collated into the first sheet. Each
+    processing module from MZMine has the complete data in its own tab. The file is saved into the current working directory."""
 
     # Make the filtered data frame output
     # combine all the key_data columns from relevant tables into one data frame for sheet1

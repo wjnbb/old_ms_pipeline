@@ -1,7 +1,10 @@
 import pandas as pd
 
 
-def divide_mzmine3_table(peak_table, pt_cols):
+def divide_mzmine3_table(peak_table: pd.DataFrame, pt_cols: list):
+
+    """Takes a list of MZMine3 column names and uses the consistent prefixes for the different processing modules to
+    divide it into a separate dataframe for each processing module applied as well as a peak height matrix."""
 
     # divide different sections of mzmine3 table into the processing modules they originate from by matching the prefix in the column headers
     # Get the aligned feature info into one data frame

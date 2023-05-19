@@ -8,7 +8,11 @@ from src.assign_global_variables import (
 )
 
 
-def detect_sample_groups(sample_names):
+def detect_sample_groups(sample_names: list):
+
+    """Takes a list of sample names and detects and divides samples into biological, blank, media/control and QC sample
+       groups based on the strings provided for Bio_identifier, Blank_identifier, Media_identifier, QC_identifier, and
+       their presence in the sample names. Biological and Media/Control samples may be divided into further subgroups."""
 
     print("\nBiological sample identifier used is...." +  Bio_identifier)
     print("Media or control sample identifier used is...." + Media_identifier)
