@@ -4,14 +4,14 @@ from src.assign_global_variables import batch_name
 
 
 def export_PT_w_norm(
-    module_tables: list[pd.DataFrame],
+    module_tables: list,
     FC_Stats: pd.DataFrame,
     Bio_stats: pd.DataFrame,
     Media_stats: pd.DataFrame,
     QC_stats: pd.DataFrame,
     Blank_stats: pd.DataFrame,
-    group_heights: tuple[pd.DataFrame],
-    norm_heights: tuple[pd.DataFrame],
+    group_heights: tuple,
+    norm_heights: tuple,
 ):
 
     """Takes the list of MZMine3 processing module Pandas dataframes, fold change stats dataframe, biological, media/control,
@@ -84,13 +84,13 @@ def export_PT_w_norm(
 
 
 def export_PT(
-    module_tables: list[pd.DataFrame],
+    module_tables: list,
     FC_Stats: pd.DataFrame,
     Bio_stats: pd.DataFrame,
     Media_stats: pd.DataFrame,
     QC_stats: pd.DataFrame,
     Blank_stats: pd.DataFrame,
-    group_heights: tuple[pd.DataFrame],
+    group_heights: tuple,
 ):
 
     """Takes the list of MZMine3 processing module Pandas dataframes, fold change stats dataframe, biological, media/control,
@@ -219,7 +219,19 @@ def export_PT_noFC(
 
     PT_output.save()
 
-def export_fraction_PT(fraction_mods_filt: list[pd.DataFrame], fraction_stats: pd.DataFrame, fraction_FC: pd.DataFrame, g):
+# fraction_mods_filt = mods_blank_filt
+# fraction_stats = bio_stats
+# fraction_FC = FC_table
+# g = 'AF05_Pp-A30_1-5_3a_YMG_'
+#
+# fraction_stats = fraction_stats[[s for s in fraction_stats.columns if g in s]]
+# #fraction_stats = bio_stats.loc[13,:]
+# fraction_FC = fraction_FC[[s for s in fraction_FC.columns if g in s]].squeeze()
+
+def export_fraction_PT(fraction_mods_filt: list, fraction_stats: pd.DataFrame, fraction_FC: pd.Series, g):
+
+    #print(g)
+    #print(fraction_stats)
 
     Key_data = pd.concat([(fraction_mods_filt[7])[["Level_of_ID", "mz", "rt", "feature_group"]],
                           (fraction_mods_filt[1])[["spectral_db_matches:compound_name", "spectral_db_matches:cosine_score"]],
@@ -227,7 +239,7 @@ def export_fraction_PT(fraction_mods_filt: list[pd.DataFrame], fraction_stats: p
                           (fraction_mods_filt[2])[["formulas:formulas", "formulas:combined_score"]],
                           (fraction_mods_filt[3])[["alignment_scores:rate"]],
                            fraction_stats,
-                           fraction_FC],
+                           pd.Series(fraction_FC)],
                            axis=1,)
 
     Key_data = Key_data.rename({'spectral_db_matches:compound_name': "MS2 match",
@@ -239,10 +251,12 @@ def export_fraction_PT(fraction_mods_filt: list[pd.DataFrame], fraction_stats: p
                                 'alignment_scores:rate': "Alignment score"
                                 }, axis='columns')
 
-    mapping = {Key_data.columns[11]: 'FC', Key_data.columns[12]: 'RSD', Key_data.columns[13]: 'SD', Key_data.columns[14]: 'Avg Height'}
+    mapping = {Key_data.columns[11]: 'RSD', Key_data.columns[12]: 'SD', Key_data.columns[13]: 'Avg Height', Key_data.columns[14]: 'FC'}
     Key_data = Key_data.rename(columns=mapping)
 
     Key_data = Key_data.sort_values(by = ['Avg Height'], ascending=False)
+
+    #print(Key_data)
 
     PT_output = pd.ExcelWriter(
         g + "Peak_Table" + ".xlsx", engine="openpyxl", mode="w"

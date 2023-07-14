@@ -11,6 +11,7 @@ def plot_rsd_vs_rt(
     Media_stats: pd.DataFrame,
     QC_stats: pd.DataFrame,
     peak_info: pd.DataFrame,
+    show_plot: bool
 ):
 
     """Creates a simple scatter plot for each sample group in the dataset of the feature RSD vs RT to assess feature
@@ -30,11 +31,17 @@ def plot_rsd_vs_rt(
     all_stats = pd.concat([all_stats, RT], axis=1)
 
     # make a new directory to store graphs in
-    os.mkdir(path + "RSD_plots/")
+    if os.path.exists(path + "RSD_plots/") == False:
+
+        os.mkdir(path + "RSD_plots/")
 
     # Make an RSD vs RT plot for each group
     for c in all_stats.columns[0 : (len(all_stats.columns) - 1)]:
 
         fig = px.scatter(all_stats, x="rt", y=c)
-        fig.show()
+
+        if show_plot == True:
+
+            fig.show()
+
         fig.write_html(path + "RSD_plots/" + c + ".html")

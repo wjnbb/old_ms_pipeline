@@ -17,9 +17,7 @@ def single_table_filt(filt_indices: list, df: pd.DataFrame) -> pd.DataFrame:
     return filt_df
 
 
-def module_tables_filt(
-    filt_indices: list, module_tables: tuple[pd.DataFrame]
-) -> list[pd.DataFrame]:
+def module_tables_filt(filt_indices: list, module_tables) -> list:
 
     """Takes a list of row indices and a tuple of Pandas dataframes and filters by row using the indices for each
     dataframe within the tuple. Returns a tuple of row filtered Pandas dataframes."""

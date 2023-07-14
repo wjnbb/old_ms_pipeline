@@ -2,7 +2,6 @@ import pandas as pd
 
 from src.assign_global_variables import Bio_identifier, bio_media_linkers
 
-
 def FC_MultiBio_vs_MultiControl(
     Bio_groups: list, Bio_stats: pd.DataFrame, Media_stats: pd.DataFrame
 ) -> pd.DataFrame:
@@ -26,6 +25,7 @@ def FC_MultiBio_vs_MultiControl(
 
         # calculate FC
         for b in bio_media_pairs:
+
             bios = [s for s in Bio_stats.columns if b in s]
             bios = [s for s in bios if "avg" in s]
             bios = Bio_stats[bios].squeeze()
@@ -33,7 +33,6 @@ def FC_MultiBio_vs_MultiControl(
             medias = [i for i in Media_stats.columns if b in i]
             medias = [i for i in medias if "avg" in i]
             medias = Media_stats[medias].squeeze()
-
 
             FC = bios / medias
 
@@ -84,7 +83,6 @@ def FC_MultiBio_vs_SingleControl(
     """Takes a list of multiple biological sample groups, the average peak height stats for biological sample groups and
     media/control sample group as separate Pandas dataframes. Returns a Pandas dataframe of the fold changes for the
     multiple biological groups average peak height vs the single control/media group average peak height."""
-
     ################################################################################
     # CALCULATE FC FOR EACH BIOLOGICAL WELL VS ITS MEDIA CONTROL
     # get character strings to allow pairing of relevant biological and media samples
@@ -110,9 +108,8 @@ def FC_MultiBio_vs_SingleControl(
 
     return FC_table
 
-
 def FC_SingleBio_vs_SingleControl(
-    Bio_stats: pd.DataFrame, Media_stats: pd.DataFrame
+    Bio_stats: pd.DataFrame, Media_stats: pd.DataFrame, BG_ignore: str
 ) -> pd.DataFrame:
 
     """Takes a Pandas dataframe of the biological sample group peak height stats and another of the media/control group peak
@@ -127,8 +124,14 @@ def FC_SingleBio_vs_SingleControl(
     Bio_stats = Bio_stats[[s for s in Bio_stats.columns if "avg" in s]].fillna(10)
     Media_stats = Media_stats[[s for s in Media_stats.columns if "avg" in s]].fillna(10)
 
-    bios = Bio_stats.iloc[:, 2]
-    medias = Media_stats.iloc[:, 2]
+    bios = Bio_stats
+
+    if len([s for s in Bio_stats.columns if BG_ignore in s]) >= 1:
+
+        bios.drop([s for s in Bio_stats.columns if BG_ignore in s], axis=1, inplace=True)
+
+    bios = Bio_stats.iloc[:, 0]
+    medias = Media_stats.iloc[:, 0]
 
     FC = bios / medias
 
