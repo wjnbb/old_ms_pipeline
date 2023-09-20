@@ -12,7 +12,7 @@ from src.Export_Peak_Table import export_PT
 from src.FC_calculator import FC_MultiBio_vs_MultiControl
 from src.Filter_Row_Indices import single_table_filt, module_tables_filt
 from src.Fraction_filter import fraction_filter
-from src.get_group_heights import get_group_heights
+from src.get_group_heights import get_single_group_heights
 from src.ID_levels import ID_levels
 from src.MZMine3_columns import mzmine3_cols
 from src.MZMine3_module_divider import divide_mzmine3_table
@@ -26,7 +26,7 @@ cols = mzmine3_cols(mzmine3)
 mods = divide_mzmine3_table(mzmine3, cols)
 names = get_sample_names(mods[6])
 groups = detect_sample_groups(names)
-heights = get_group_heights(mods[6], groups[4], groups[5], groups[2], groups[3])
+heights = get_single_group_heights(mods[6], names)
 
 #Calculate summary stats for all features in all groups
 bio_stats = avg_sd_rsd(heights[0], groups[4], groups[0])

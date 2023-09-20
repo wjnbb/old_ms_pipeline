@@ -50,12 +50,3 @@ ID_levels(mods_blank_filt)
 
 #Export peak table for the whole dataset
 export_PT(mods_blank_filt, FC_table, bio_stats, media_stats, qc_stats, blank_stats, heights)
-
-
-
-
-
-
-
-
-
