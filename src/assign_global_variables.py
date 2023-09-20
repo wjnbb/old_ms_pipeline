@@ -1,14 +1,13 @@
-#Workflow1
-path = "C:/Users/WilliamNash/Bactobio Dropbox/Baccuico/LAB Work/Lab Work - Will/Mass_spec_data/20230630_JB_BI12_MeOH/MZMine3/"
-batch_name = "20230630_JB_BI12_MeOH"
+path = "C:/Users/WilliamNash/Bactobio Dropbox/Baccuico/LAB Work/Lab Work - Will/Mass_spec_data/20230726_BD58_LM3_Zt/MZMine3/"
+batch_name = "20230726_BD58_LM3_Zt"
 MS_system = "Sciex"
-peaklist = "peaklist.csv"
-Bio_identifier = "BI12"
-Blank_identifier = "Blank"
-Media_identifier = "Media"
+peaklist = "20230726_BD58_LM3_Zt2_peaklist.csv"
+Bio_identifier = "BD58"
+Blank_identifier = "DMSO"
+Media_identifier = "media"
 QC_identifier = "QC"
-bio_media_linkers = "NA"
-Blank_thresh = 10
+bio_media_linkers = ["A5", "B5", "B6", "B10", "C6"]
 FC_threshold = 10
 RSD_threshold = 30
 peak_height_threshold = 10000
+Blank_thresh = 10
