@@ -16,10 +16,7 @@ def read_mzmine3_peaktable(path: str, raw_peak_table: str):
     # change the working directory
     os.chdir(path)
 
-    # read in the peak table from the working directory
-    peak_table = pd.read_csv(raw_peak_table)
-
-    # set the row indices to be the MZMine3 peak ID numbers
-    peak_table = peak_table.set_index("id")
+    # read in the peak table from the working directory and set the row indices to be the MZMine3 peak ID numbers
+    peak_table = pd.read_csv(raw_peak_table, index_col=0)
 
     return peak_table

@@ -3,21 +3,19 @@ from src.Filter_Row_Indices import single_table_filt, module_tables_filt
 from src.Export_Peak_Table import export_fraction_PT
 from src.assign_global_variables import bio_media_linkers, Bio_identifier, FC_threshold, RSD_threshold, peak_height_threshold
 
- # active_groups = groups[4]
- # Bio_stats = bio_stats
- # FC_Stats = FC_table
- # Mods_filt = mods_blank_filt
- # g = 'AF05_Pp-A30_1-5_3a_YMG_'
-
 def fraction_filter(Bio_stats: pd.DataFrame, active_groups: list, FC_Stats: pd.DataFrame, Mods_filt: list):
+
+    print("")
+    print("FC threshold applied is " + str(FC_threshold))
+    print("RSD threshold applied is " + str(RSD_threshold))
+    print("Peak height threshold applied is " + str(peak_height_threshold))
+    print("")
 
     #Check if bio_media_linkers were applied or not
     if(bio_media_linkers != "NA"):
 
         #loop through the biological sample groups in the dataset
         for g in active_groups:
-
-            #print(g)
 
             #check that the current biological sample group in question found in bio_media_linkers, if not skip it
             if any(b in g for b in bio_media_linkers):

@@ -76,3 +76,59 @@ def detect_sample_groups(sample_names: list):
         print("\nNo QC samples present")
 
     return Bio, Media, Blanks, QCs, Bio_groups, Media_groups
+
+def detect_single_sample_groups(sample_names: list):
+
+    # get all biological sample names from list of sample names
+    if (len([s for s in sample_names if Bio_identifier in s])) >= 1:
+
+        Bio = ([s for s in sample_names if Bio_identifier in s])
+        print("\nFirst ten biological samples names are...")
+        print(Bio[0:9])
+        print("Number of Biological samples found = " + str(len(Bio)))
+        Bio_groups = Bio_identifier
+
+    else:
+        Bio = []
+        Bio_groups = []
+        print("\nNo biological samples present")
+
+    # get all media sample names from list of sample names
+    if (len([s for s in sample_names if Media_identifier in s])) >= 1:
+
+        Media = ([s for s in sample_names if Media_identifier in s])
+        print("\nFirst ten media/control samples names are...")
+        print(Media[0:9])
+        print("Number of Media/control samples found = " + str(len(Media)))
+        Media_groups = Media_identifier
+
+    else:
+        Media = []
+        Media_groups = []
+        print("\nNo Media samples present")
+
+    # get all blank sample names from list of column names
+    if (len([s for s in sample_names if Blank_identifier in s])) >= 1:
+
+        Blanks = np.unique([s for s in sample_names if Blank_identifier in s]).tolist()
+        Blanks = [b for b in Blanks if "Condition" not in b]
+        print("\nFirst ten blank samples names are...")
+        print(Blanks[0:9])
+        print("Number of blank samples found = " + str(len(Blanks)))
+    else:
+        Blanks = []
+        print("\nNo Blank samples present")
+
+    # get all QC sample names from list of column names
+    if (len([s for s in sample_names if QC_identifier in s])) >= 1:
+
+        QCs = np.unique([s for s in sample_names if QC_identifier in s]).tolist()
+        QCs = [b for b in QCs if "Condition" not in b]
+        print("\nFirst ten QC samples names are...")
+        print(QCs[0:9])
+        print("Number of QC samples found = " + str(len(QCs)))
+    else:
+        QCs = []
+        print("\nNo QC samples present")
+
+    return Bio, Media, Blanks, QCs, Bio_groups, Media_groups

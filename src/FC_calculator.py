@@ -46,6 +46,7 @@ def FC_MultiBio_vs_MultiControl(
         for b in bio_media_pairs:
 
             bios = [s for s in Bio_stats.columns if b in s]
+
             bios = [s for s in bios if "avg" in s]
             bios = Bio_stats[bios].squeeze()
 
@@ -71,6 +72,11 @@ def FC_MultiBio_vs_MultiControl(
                 medias = Media_stats[medias].squeeze()
 
                 FC = bios / medias
+
+                print(FC)
+
+
+
                 FC_table.insert(0, ("FC" + b), FC)
 
         return FC_table
