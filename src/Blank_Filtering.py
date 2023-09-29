@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-from src.assign_global_variables import Blank_thresh
+from src.assign_global_variables import Blank_thresh, QC_identifier, Media_identifier
 
 def blank_filter(
     Bio_stats: pd.DataFrame,
@@ -15,8 +15,15 @@ def blank_filter(
     variable versus the average height of the blank samples and returns a list of the indices of those rows."
     """
 
-    all_stats = pd.concat([Bio_stats, Media_stats, QC_stats], axis=1)
-    all_stats = all_stats[[s for s in all_stats.columns if "avg" in s]]
+    if Media_identifier == QC_identifier:
+
+        all_stats = pd.concat([Bio_stats, QC_stats], axis=1)
+        all_stats = all_stats[[s for s in all_stats.columns if "avg" in s]]
+
+    else:
+
+        all_stats = pd.concat([Bio_stats, Media_stats, QC_stats], axis=1)
+        all_stats = all_stats[[s for s in all_stats.columns if "avg" in s]]
 
     all_stats = all_stats.fillna(10)
     Blank_stats["Blank_avg"] = Blank_stats["Blank_avg"].fillna(10)
@@ -26,21 +33,25 @@ def blank_filter(
     # calculate FC against the blank average for all bio,media and QC triplicates
     for b in all_stats.columns:
 
-        print("Printing column for BFC calculation...." + str(b))
-
         bios = all_stats[[s for s in all_stats.columns if b in s]]
         bios = bios.squeeze()
         B_FC = bios / (Blank_stats["Blank_avg"].squeeze())
-        print("Printing calculated BFC column" + str(B_FC))
         B_FC_table.insert(0, ("FC" + b), B_FC)
 
     Blank_i_filt = []
+    blank_db_filt = []
 
+    #check if each row surpasses the required FC for blank filtering or not
     for r in B_FC_table.index:
 
         if np.nanmax((B_FC_table.loc[r, :])) >= Blank_thresh:
 
             Blank_i_filt.append(r)
+
+        #line here to store peak IDs for blank origin peaks for cumulative DB storage
+        else:
+
+            blank_db_filt.append(r)
 
     print("")
     print("Blank threshold applied for filtering is " + str(Blank_thresh))
@@ -50,4 +61,4 @@ def blank_filter(
         + " % of features left after blank filtering"
     )
 
-    return Blank_i_filt
+    return Blank_i_filt, blank_db_filt

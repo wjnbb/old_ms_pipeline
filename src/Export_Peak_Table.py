@@ -1,4 +1,6 @@
 import pandas as pd
+import datetime
+import sqlite3
 
 from src.assign_global_variables import batch_name
 
@@ -80,6 +82,16 @@ def export_PT_w_norm(
     PT_output.save()
 
 
+#export_PT(mods_blank_filt, FC_table, bio_stats, media_stats, qc_stats, blank_stats, heights)
+# module_tables = mods_blank_filt
+# FC_Stats = FC_table
+# Bio_stats = bio_stats
+# Media_stats = media_stats
+# QC_stats = qc_stats
+# Blank_stats = blank_stats
+# group_heights = heights
+
+
 def export_PT(
     module_tables: list,
     FC_Stats: pd.DataFrame,
@@ -151,7 +163,7 @@ def export_PT(
     all_stats.to_excel(PT_output, "All_Stats")
     heights.to_excel(PT_output, "Raw Peak Heights")
 
-    PT_output.save()
+    PT_output.close()
 
 
 def export_PT_noFC(
@@ -218,7 +230,7 @@ def export_PT_noFC(
     all_stats.to_excel(PT_output, "All_Stats")
     heights.to_excel(PT_output, "Raw Peak Heights")
 
-    PT_output.save()
+    PT_output.close()
 
 def export_fraction_PT(fraction_mods_filt: list, fraction_stats: pd.DataFrame, fraction_FC: pd.Series, g):
 
@@ -253,4 +265,85 @@ def export_fraction_PT(fraction_mods_filt: list, fraction_stats: pd.DataFrame, f
 
     Key_data.to_excel(PT_output, "Key_Data")
 
-    PT_output.save()
+    PT_output.close()
+
+def export_blank_PT(fraction_mods_filt: list, fraction_stats: pd.DataFrame):
+
+
+    Key_data = pd.concat([(fraction_mods_filt[7])[["mz", "rt", "feature_group"]],
+                          (fraction_mods_filt[4])[["ion_identities:ion_identities"]],
+                          (fraction_mods_filt[1])[["spectral_db_matches:compound_name", "spectral_db_matches:cosine_score"]],
+                          (fraction_mods_filt[0])[["compound_db_identity:compound_name", "compound_db_identity:mz_diff_ppm"]],
+                          (fraction_mods_filt[2])[["formulas:formulas", "formulas:combined_score"]],
+                          (fraction_mods_filt[3])[["alignment_scores:rate"]],
+                           fraction_stats],
+                           axis=1,)
+
+
+    Key_data = Key_data.rename({'ion_identities:ion_identities': "Adduct",
+                                'spectral_db_matches:compound_name': "MS2 match",
+                                'spectral_db_matches:cosine_score': "MS2 cosine score",
+                                'compound_db_identity:compound_name': "MS1 match",
+                                'compound_db_identity:mz_diff_ppm': "MS1 ppm error",
+                                'formulas:formulas': 'Predicted MF',
+                                'formulas:combined_score': 'MF score',
+                                'alignment_scores:rate': "Alignment score"
+                                }, axis='columns')
+
+    mapping = {Key_data.columns[11]: 'RSD', Key_data.columns[12]: 'SD', Key_data.columns[13]: 'Avg Height'}
+    Key_data = Key_data.rename(columns=mapping)
+
+    Key_data = Key_data.sort_values(by = ['Avg Height'], ascending=False)
+
+    date = datetime.datetime.now()
+
+    Key_data["Date/Time"] = date
+
+    PT_output = pd.ExcelWriter(
+        ("C:/Users/WilliamNash/Bactobio Dropbox/Baccuico/LAB Work/Lab Work - Will/Bactobio_LCMS_Database/" + (str(date)[0:10]) + "_Bactobio_Blank_DB" + ".xlsx"), engine="openpyxl", mode="w"
+    )
+
+    Key_data.to_excel(PT_output, "Key_Data")
+
+    PT_output.close()
+
+
+def export_group_PT_forDB(fraction_mods_filt: list, fraction_stats: pd.DataFrame, g):
+
+
+    Key_data = pd.concat([(fraction_mods_filt[7])[["mz", "rt", "feature_group"]],
+                          (fraction_mods_filt[4])[["ion_identities:ion_identities"]],
+                          (fraction_mods_filt[1])[["spectral_db_matches:compound_name", "spectral_db_matches:cosine_score"]],
+                          (fraction_mods_filt[0])[["compound_db_identity:compound_name", "compound_db_identity:mz_diff_ppm"]],
+                          (fraction_mods_filt[2])[["formulas:formulas", "formulas:combined_score"]],
+                          (fraction_mods_filt[3])[["alignment_scores:rate"]],
+                           fraction_stats],
+                           axis=1,)
+
+
+    Key_data = Key_data.rename({'ion_identities:ion_identities': "Adduct",
+                                'spectral_db_matches:compound_name': "MS2 match",
+                                'spectral_db_matches:cosine_score': "MS2 cosine score",
+                                'compound_db_identity:compound_name': "MS1 match",
+                                'compound_db_identity:mz_diff_ppm': "MS1 ppm error",
+                                'formulas:formulas': 'Predicted MF',
+                                'formulas:combined_score': 'MF score',
+                                'alignment_scores:rate': "Alignment score"
+                                }, axis='columns')
+
+    mapping = {Key_data.columns[11]: 'RSD', Key_data.columns[12]: 'SD', Key_data.columns[13]: 'Avg Height'}
+    Key_data = Key_data.rename(columns=mapping)
+
+    Key_data = Key_data.sort_values(by = ['Avg Height'], ascending=False)
+
+    date = datetime.datetime.now()
+
+    Key_data["Date/Time"] = date
+
+    PT_output = pd.ExcelWriter(
+        ("C:/Users/WilliamNash/Bactobio Dropbox/Baccuico/LAB Work/Lab Work - Will/Bactobio_LCMS_Database/" + g + "Peak_Table" + ".xlsx"), engine="openpyxl", mode="w"
+    )
+
+    Key_data.to_excel(PT_output, "Key_Data")
+
+    PT_output.close()

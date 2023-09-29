@@ -68,7 +68,7 @@ def ID_levels(Mods_filt: list):
             ID_level.append("Level 5")
             continue
 
-    ID_level
+    #ID_level
 
     print("")
     print(str(ID_level.count("Level 2")) + " level 2 annotations assigned")

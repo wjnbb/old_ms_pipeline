@@ -28,13 +28,14 @@ def transformation_multi(norm_heights: tuple[pd.DataFrame], trans_type: str):
 
     return trans_heights
 
-
 def transformation_single(df: pd.DataFrame, trans_type: str):
 
     """Transforms all average peak height columns in the supplied dataframe. Use either "log", "log10" or "log2"
      to specify the transformation type. Returns a transformed dataframe."""
 
-    df = df[[s for s in df.columns if "avg" in s]]
+    if len([s for s in df.columns if "avg" in s]) != 0:
+
+        df = df[[s for s in df.columns if "avg" in s]]
 
     if trans_type == "log":
 

@@ -3,7 +3,7 @@ import numpy as np
 import os
 from sklearn.decomposition import PCA
 import plotly.express as px
-from src.assign_global_variables import Blank_identifier, path
+from src.assign_global_variables import Blank_identifier, path, Media_identifier, QC_identifier
 
 def plot_PCA(df: pd.DataFrame, Bio_groups: list, Media_groups: list):
 
@@ -11,7 +11,10 @@ def plot_PCA(df: pd.DataFrame, Bio_groups: list, Media_groups: list):
 
     #get sample groups into a list
     groups = Bio_groups + Media_groups
-    groups.append("QC")
+
+    if Media_identifier != QC_identifier:
+
+        groups.append("QC")
 
     #remove any columns with blank data as we're not interested in this data
     df.drop(df.columns[df.columns.str.contains(Blank_identifier)], axis=1, inplace=True)
@@ -39,28 +42,51 @@ def plot_PCA(df: pd.DataFrame, Bio_groups: list, Media_groups: list):
 
     # all PCAs done following the tutorial at the following link below
     #https://plotly.com/python/pca-visualization/
+    #Multiple PCA plot doesn't work even with the example iris dataset would be nice to add in but leaving out for now
 
     #
     if(os.path.exists(path + "/PCA") == False):
 
         os.mkdir(path + "/PCA")
 
-    pca = PCA()
-    components = pca.fit_transform(df_trans[peaks])
-    labels = {
-        str(i): f"PC {i+1} ({var:.1f}%)"
-        for i, var in enumerate(pca.explained_variance_ratio_ * 100)
-    }
 
-    fig = px.scatter_matrix(
-        components,
-        labels=labels,
-        dimensions=range(4),
-        color=df_trans["group"]
-    )
-    fig.update_traces(diagonal_visible=False)
-    fig.show()
-    fig.write_html(path + "PCA/Multiple_PCAs.html")
+    #MULTIPLE PCA PLOTTING WHICH FAILED
+    # pca = PCA()
+    # components = pca.fit_transform(df_trans[peaks])
+    # labels = {
+    #     str(i): f"PC {i+1} ({var:.1f}%)"
+    #     for i, var in enumerate(pca.explained_variance_ratio_ * 100)
+    # }
+    #
+    # fig = px.scatter_matrix(
+    #     components,
+    #     labels=labels,
+    #     dimensions=range(4),
+    #     color=df_trans["group"]
+    # )
+    # fig.update_traces(diagonal_visible=False)
+    # fig.show()
+    # fig.write_html(path + "PCA/Multiple_PCAs.html")
+
+    # test = px.data.iris()
+    # features = ["sepal_width", "sepal_length", "petal_width", "petal_length"]
+    #
+    # pca = PCA()
+    # components = pca.fit_transform(test[features])
+    # labels = {
+    #      str(i): f"PC {i+1} ({var:.1f}%)"
+    #      for i, var in enumerate(pca.explained_variance_ratio_ * 100)
+    #  }
+    #
+    # fig = px.scatter_matrix(
+    #      components,
+    #      labels=labels,
+    #      dimensions=range(4),
+    #      color=test["species"]
+    #  )
+    # fig.update_traces(diagonal_visible=False)
+    # fig.show()
+    # fig.write_html(path + "PCA/Multiple_PCAs.html")
 
     #2D PCA plot
     pca = PCA(n_components=2)
@@ -89,22 +115,20 @@ def plot_PCA(df: pd.DataFrame, Bio_groups: list, Media_groups: list):
     pca.fit(df_trans[peaks])
     exp_var_cumul = np.cumsum(pca.explained_variance_ratio_)
 
-    px.area(
+    fig = px.area(
         x=range(1, exp_var_cumul.shape[0] + 1),
         y=exp_var_cumul,
         labels={"x": "# Components", "y": "Explained Variance"}
     )
 
-    #
+    fig.show()
+    fig.write_html(path + "PCA/explained_variance.html")
+
+    #generate loadings plots
     pca = PCA(n_components=2)
     components = pca.fit_transform(df_trans[peaks])
-
     loadings = pca.components_.T * np.sqrt(pca.explained_variance_)
-
     fig = px.scatter(components, x=0, y=1, color=df_trans['group'])
-    fig.show()
-
-    print("WHY IS THIS NOT WORKING")
 
     for i, feature in enumerate(df_trans[peaks]):
         fig.add_annotation(
@@ -124,10 +148,9 @@ def plot_PCA(df: pd.DataFrame, Bio_groups: list, Media_groups: list):
             ax=0, ay=0,
             xanchor="center",
             yanchor="bottom",
+            text=feature,
             yshift=5,
         )
 
-    print("THIS SHOULD HAVE WORKED")
     fig.show()
-
-
+    fig.write_html(path + "PCA/loadings.html")

@@ -3,7 +3,7 @@ import os
 import pandas as pd
 import plotly.express as px
 
-from src.assign_global_variables import path
+from src.assign_global_variables import path, Media_identifier, QC_identifier
 
 
 def plot_rsd_vs_rt(
@@ -21,8 +21,14 @@ def plot_rsd_vs_rt(
     # extract all RTs as a series
     RT = peak_info[["rt"]].squeeze()
 
-    # combine stats cols from biological, media and QC groups
-    all_stats = pd.concat([Bio_stats, Media_stats, QC_stats], axis=1)
+    if Media_identifier == QC_identifier:
+
+        all_stats = pd.concat([Bio_stats, QC_stats], axis=1)
+
+    else:
+
+        all_stats = pd.concat([Bio_stats, Media_stats, QC_stats], axis=1)
+
 
     # get all columns that contain rsd information
     all_stats = all_stats[[s for s in all_stats.columns if "rsd" in s]]

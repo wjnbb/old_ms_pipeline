@@ -4,21 +4,23 @@ import pandas as pd
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
-def plot_peak_height_hist(df: pd.DataFrame, plot_name : str):
+def plot_peak_height_hist(df: pd.DataFrame, plot_name : str, show_fig: bool):
 
     """ Makes a simple histogram of peak height data when supplied with a table containing average peak heights."""
+
+    if type(df) is tuple:
+
+        df = pd.concat([df[0], df[1], df[2]], axis=1)
+
+        # filter so just the avg peak height data is remaining
+        df = df[[i for i in df.columns if "avg" in i]]
 
     if(os.path.exists(path + "/histograms") == False):
 
         os.mkdir(path + "/histograms")
 
-    h4h = df
-
-    #filter so just the avg peak height data is remaining
-    h4h = df[[i for i in df.columns if "avg" in i]]
-
     #melt the remaining data so all peak height info is in one column
-    h4h = pd.melt(h4h)
+    df = pd.melt(df)
 
     #initialise plot
     fig = make_subplots(
@@ -28,7 +30,7 @@ def plot_peak_height_hist(df: pd.DataFrame, plot_name : str):
 
     #add the data to the plot
     fig.add_trace(
-        go.Histogram(x=h4h.value, nbinsx=100), row=1, col=1
+        go.Histogram(x=df.value, nbinsx=100), row=1, col=1
     )
 
     fig.update_layout(
@@ -37,6 +39,9 @@ def plot_peak_height_hist(df: pd.DataFrame, plot_name : str):
         yaxis_title="Count"
     )
 
-    fig.write_image(plot_name + ".png")
+    #fig.write_image(plot_name + ".png")
+    fig.write_html("histograms/" + plot_name + ".html")
 
-    return fig.show()
+    if show_fig == "True":
+
+        fig.show()

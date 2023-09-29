@@ -73,10 +73,6 @@ def FC_MultiBio_vs_MultiControl(
 
                 FC = bios / medias
 
-                print(FC)
-
-
-
                 FC_table.insert(0, ("FC" + b), FC)
 
         return FC_table

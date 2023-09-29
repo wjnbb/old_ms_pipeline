@@ -1,12 +1,18 @@
 import pandas as pd
+from sklearn import datasets
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
 from sklearn.ensemble import ExtraTreesRegressor
 from src.assign_global_variables import Blank_identifier
 
 #peak_matrix = Mods_QC_filt[6]
+# peak_matrix = norm_heights
 
 def random_forest_MVI(peak_matrix: pd.DataFrame, iterations: int, tree_num: int):
+
+    if type(peak_matrix) is tuple:
+
+        peak_matrix = pd.concat([peak_matrix[0], peak_matrix[1], peak_matrix[2]], axis = 1)
 
     # remove any columns with blank data as we're not interested in this data
     peak_matrix.drop(peak_matrix.columns[peak_matrix.columns.str.contains(Blank_identifier)], axis=1, inplace=True)
