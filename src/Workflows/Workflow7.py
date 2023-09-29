@@ -3,6 +3,7 @@
 # Blank Subtraction implemented
 # Multi Bio Single control FCs
 # QC data present - PCA plotted
+# Data from blanks and all sample types added to cumulative DB files
 
 from src.assign_global_variables import path, peaklist, Blank_identifier, QC_identifier
 from src.Avg_height_hists import plot_peak_height_hist
@@ -10,9 +11,10 @@ from src.Avg_SD_RSD_calcs import avg_sd_rsd
 from src.Blank_Filtering import blank_filter
 from src.detect_sample_groups import detect_sample_groups
 from src.Export_Peak_Table import export_PT
+from src.Export_Blank_Peaks import export_blank_peaks
 from src.FC_calculator import FC_MultiBio_vs_SingleControl
 from src.Filter_Row_Indices import single_table_filt, module_tables_filt
-from src.Fraction_filter import fraction_filter
+from src.Fraction_filter import fraction_filter, db_filter
 from src.get_group_heights import get_single_group_heights
 from src.ID_levels import ID_levels
 from src.MVI import random_forest_MVI
@@ -42,10 +44,11 @@ qc_stats = avg_sd_rsd(heights[3], QC_identifier, groups[3])
 
 #Blank Filtering
 blank_i_filt = blank_filter(bio_stats, media_stats, qc_stats, blank_stats)
-bio_stats = single_table_filt(blank_i_filt, bio_stats)
-media_stats = single_table_filt(blank_i_filt, media_stats)
-qc_stats = single_table_filt(blank_i_filt, qc_stats)
-mods_blank_filt = module_tables_filt(blank_i_filt, mods)
+export_blank_peaks(blank_stats, blank_i_filt[1], mods)
+bio_stats = single_table_filt(blank_i_filt[0], bio_stats)
+media_stats = single_table_filt(blank_i_filt[0], media_stats)
+qc_stats = single_table_filt(blank_i_filt[0], qc_stats)
+mods_blank_filt = module_tables_filt(blank_i_filt[0], mods)
 
 #plot feature reproducibility across the run
 plot_rsd_vs_rt(bio_stats, media_stats, qc_stats, mods_blank_filt[7], show_plot=True)
@@ -55,6 +58,10 @@ FC_table = FC_MultiBio_vs_SingleControl(groups[4], bio_stats, media_stats)
 
 #Add levels of ID
 ID_levels(mods_blank_filt)
+
+#Export Non-blank Bio, Media/Control and QC features to the Bactobio DB
+db_filter(bio_stats, groups[4], mods_blank_filt)
+db_filter(media_stats, groups[5], mods_blank_filt)
 
 #Export peak table for the whole dataset
 export_PT(mods_blank_filt, FC_table, bio_stats, media_stats, qc_stats, blank_stats, heights)
