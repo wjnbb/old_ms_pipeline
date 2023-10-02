@@ -42,10 +42,10 @@ qc_stats = avg_sd_rsd(heights[3], QC_identifier, groups[3])
 
 #Blank Filtering
 blank_i_filt = blank_filter(bio_stats, media_stats, qc_stats, blank_stats)
-bio_stats = single_table_filt(blank_i_filt, bio_stats)
-media_stats = single_table_filt(blank_i_filt, media_stats)
-qc_stats = single_table_filt(blank_i_filt, qc_stats)
-mods_blank_filt = module_tables_filt(blank_i_filt, mods)
+bio_stats = single_table_filt(blank_i_filt[0], bio_stats)
+media_stats = single_table_filt(blank_i_filt[0], media_stats)
+qc_stats = single_table_filt(blank_i_filt[0], qc_stats)
+mods_blank_filt = module_tables_filt(blank_i_filt[0], mods)
 
 #plot feature reproducibility across the run
 plot_rsd_vs_rt(bio_stats, media_stats, qc_stats, mods_blank_filt[7], show_plot=True)
