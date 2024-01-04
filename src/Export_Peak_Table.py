@@ -267,6 +267,41 @@ def export_fraction_PT(fraction_mods_filt: list, fraction_stats: pd.DataFrame, f
 
     PT_output.close()
 
+def export_fraction_PT_noFC(fraction_mods_filt: list, fraction_stats: pd.DataFrame, g, feature_group_size):
+
+    Key_data = pd.concat([(fraction_mods_filt[7])[["Level_of_ID", "mz", "rt", "feature_group"]],
+                          feature_group_size,
+                          (fraction_mods_filt[4])[["ion_identities:ion_identities"]],
+                          (fraction_mods_filt[1])[["spectral_db_matches:compound_name", "spectral_db_matches:cosine_score"]],
+                          (fraction_mods_filt[0])[["compound_db_identity:compound_name", "compound_db_identity:mz_diff_ppm"]],
+                          (fraction_mods_filt[2])[["formulas:formulas", "formulas:combined_score"]],
+                          (fraction_mods_filt[3])[["alignment_scores:rate"]],
+                           fraction_stats],
+                           axis=1,)
+
+    Key_data = Key_data.rename({'ion_identities:ion_identities': "Adduct",
+                                'spectral_db_matches:compound_name': "MS2 match",
+                                'spectral_db_matches:cosine_score': "MS2 cosine score",
+                                'compound_db_identity:compound_name': "MS1 match",
+                                'compound_db_identity:mz_diff_ppm': "MS1 ppm error",
+                                'formulas:formulas': 'Predicted MF',
+                                'formulas:combined_score': 'MF score',
+                                'alignment_scores:rate': "Alignment score"
+                                }, axis='columns')
+
+    mapping = {Key_data.columns[4]: 'Feature_group_size', Key_data.columns[13]: 'RSD', Key_data.columns[14]: 'SD', Key_data.columns[15]: 'Avg Height'}
+    Key_data = Key_data.rename(columns=mapping)
+
+    Key_data = Key_data.sort_values(by = ['Avg Height'], ascending=False)
+
+    PT_output = pd.ExcelWriter(
+        g + "Peak_Table" + ".xlsx", engine="openpyxl", mode="w"
+    )
+
+    Key_data.to_excel(PT_output, "Key_Data")
+
+    PT_output.close()
+
 def export_blank_PT(fraction_mods_filt: list, fraction_stats: pd.DataFrame):
 
 

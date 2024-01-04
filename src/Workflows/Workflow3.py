@@ -51,6 +51,3 @@ ID_levels(mods_blank_filt)
 
 #Export peak table for the whole dataset
 export_PT(mods_blank_filt, FC_table, bio_stats, media_stats, qc_stats, blank_stats, heights)
-
-#Export stringently filtered peak tables for individual biological samples
-fraction_filter(bio_stats, groups[4], FC_table, mods_blank_filt)
