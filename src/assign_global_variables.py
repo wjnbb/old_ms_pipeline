@@ -1,14 +1,13 @@
-#Workflow1
-path = "C:/Users/WilliamNash/Bactobio Dropbox/Baccuico/LAB Work/Lab Work - Will/Mass_spec_data/20231218_Set1mix_LM4/MZMine3/"
-batch_name = "20231218_Set1mix_LM4"
+path = "C:/Users/WilliamNash/Bactobio Dropbox/Baccuico/LAB Work/Lab Work - Will/AC003_DataFiltering/FG_investigation_results/output_0.5_0.9_0.9/"
+batch_name = "output_0.5_0.9_0.9"
 MS_system = "Agilent"
-peaklist = "peaklist.csv"
+peaklist = "output_0.5_0.9_0.9.csv"
 Bio_identifier = "Set"
+Media_identifier = "Media"
 Blank_identifier = "Blank"
-Media_identifier = "Load"
 QC_identifier = "QC"
-bio_media_linkers = ["NA"]
 Blank_thresh = 10
 FC_threshold = 10
 RSD_threshold = 30
 peak_height_threshold = 10000
+bio_media_linkers = "NA"

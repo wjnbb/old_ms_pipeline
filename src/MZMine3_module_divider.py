@@ -40,6 +40,9 @@ def divide_mzmine3_table(peak_table: pd.DataFrame, pt_cols: list):
     # Loop through the sample cols to get the peak height for each sample to make peak matrix
     sample_cols = list(sample_data.columns)
     height_df = sample_data[(s for s in sample_cols if s.endswith(":height"))]
+    fwhm_df = sample_data[(s for s in sample_cols if s.endswith(":fwhm"))]
+    asymmetry_df = sample_data[(s for s in sample_cols if s.endswith(":asymmetry_factor"))]
+    tailing_df = sample_data[(s for s in sample_cols if s.endswith(":tailing_factor"))]
 
     print("\ncompleted MZMine3 peak table dividing")
 
@@ -52,4 +55,7 @@ def divide_mzmine3_table(peak_table: pd.DataFrame, pt_cols: list):
         manual_anno_data,
         height_df,
         aligned_feature_info,
+        fwhm_df,
+        asymmetry_df,
+        tailing_df
     )

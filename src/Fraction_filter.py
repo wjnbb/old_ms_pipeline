@@ -90,12 +90,17 @@ def fraction_filter(Bio_stats: pd.DataFrame, active_groups: list, FC_Stats: pd.D
 # Mods_filt = mods_blank_filt
 
 
-def fraction_filter_noFC(Bio_stats: pd.DataFrame, active_groups: list, Mods_filt: list):
+def fraction_filter_noFC(
+        Bio_stats: pd.DataFrame,
+        active_groups: list,
+        Mods_filt: list,
+        peak_quality_metrics:pd.DataFrame
+):
 
-    print("")
-    print("RSD threshold applied is " + str(RSD_threshold))
-    print("Peak height threshold applied is " + str(peak_height_threshold))
-    print("")
+    #print("")
+    #print("RSD threshold applied is " + str(RSD_threshold))
+    #print("Peak height threshold applied is " + str(peak_height_threshold))
+    #print("")
 
     for g in active_groups:
 
@@ -111,8 +116,8 @@ def fraction_filter_noFC(Bio_stats: pd.DataFrame, active_groups: list, Mods_filt
         fraction_stats = single_table_filt(fraction_peaks, Bio_stats)
         fraction_mods_filt = module_tables_filt(fraction_peaks, Mods_filt)
 
-        print("")
-        print(str(len(fraction_peaks)) + " features meet the filtering criteria in " + str(g))
+        #print("")
+        #print(str(len(fraction_peaks)) + " features meet the filtering criteria in " + str(g))
 
         #get summary peak info for further filtering to make output simpler, only report 1 feature per feature group
         peak_info = fraction_mods_filt[7]
@@ -132,7 +137,7 @@ def fraction_filter_noFC(Bio_stats: pd.DataFrame, active_groups: list, Mods_filt
         #get unique feature groups
         feature_groups = peak_info.feature_group.unique()
 
-        print(f"There are {len(feature_groups)} unique feature groups (metabolites) in the output for {g}")
+        #print(f"There are {len(feature_groups)} unique feature groups (metabolites) in the output for {g}")
 
         filtered_features = []
         feature_group_size = []
@@ -141,7 +146,7 @@ def fraction_filter_noFC(Bio_stats: pd.DataFrame, active_groups: list, Mods_filt
 
             #subset the table for the feature group
             feature_group_info = peak_info[peak_info["feature_group"] == fg]
-            print(f"There are {len(feature_group_info)} features in the feature group {fg}")
+            #print(f"There are {len(feature_group_info)} features in the feature group {fg}")
 
             for feature in feature_group_info.index:
 
@@ -160,16 +165,17 @@ def fraction_filter_noFC(Bio_stats: pd.DataFrame, active_groups: list, Mods_filt
                     filtered_features.append(feature)
                     feature_group_size.append(len(feature_group_info))
 
-        print(f"{len(filtered_features)} features meet the feature group filtering criteria in {g}")
+        #print(f"{len(filtered_features)} features meet the feature group filtering criteria in {g}")
 
         feature_group_size = pd.Series(feature_group_size)
 
         fraction_stats = single_table_filt(filtered_features, Bio_stats)
         fraction_mods_filt = module_tables_filt(filtered_features, Mods_filt)
         feature_group_size = feature_group_size.set_axis(fraction_stats.index)
+        fr_peak_quality_metrics = single_table_filt(filtered_features, peak_quality_metrics)
 
         fraction_stats = fraction_stats[[s for s in fraction_stats.columns if g in s]]
-        export_fraction_PT_noFC(fraction_mods_filt, fraction_stats, g, feature_group_size)
+        export_fraction_PT_noFC(fraction_mods_filt, fraction_stats, g, feature_group_size, fr_peak_quality_metrics)
 
 
 def db_filter(Bio_stats: pd.DataFrame, active_groups: list, Mods_filt: list):

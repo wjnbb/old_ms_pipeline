@@ -173,6 +173,7 @@ def export_PT_noFC(
     QC_stats,
     Blank_stats,
     group_heights,
+    peak_quality_metrics
 ):
 
     # Make the filtered data frame output
@@ -183,18 +184,17 @@ def export_PT_noFC(
         [group_heights[0], group_heights[1], group_heights[2], group_heights[3]], axis=1
     )
 
+    avg_height = heights.mean(axis=1)
+    avg_height.name = "Avg_height"
+
     Key_data = pd.DataFrame()
 
     Key_data = pd.concat(
-        [
-            ((module_tables[7])[["Level_of_ID", "mz", "rt", "feature_group"]]),
-            (module_tables[4])[["ion_identities:ion_identities"]],
-            (module_tables[1])[
-                [
-                    "spectral_db_matches:compound_name",
-                    "spectral_db_matches:cosine_score",
-                ]
-            ],
+        [((module_tables[7])[["Level_of_ID", "mz", "rt", "feature_group"]]),
+               (module_tables[4])[["ion_identities:ion_identities"]],
+               (module_tables[1])[
+                ["spectral_db_matches:compound_name",
+                 "spectral_db_matches:cosine_score"]],
             (module_tables[0])[
                 [
                     "compound_db_identity:compound_name",
@@ -203,7 +203,8 @@ def export_PT_noFC(
             ],
             (module_tables[2])[["formulas:formulas", "formulas:combined_score"]],
             (module_tables[3])[["alignment_scores:rate"]],
-        ],
+            peak_quality_metrics,
+            avg_height],
         axis=1,
     )
 
@@ -214,8 +215,7 @@ def export_PT_noFC(
                      'compound_db_identity:mz_diff_ppm': "MS1 ppm error",
                      'formulas:formulas': 'Predicted MF',
                      'formulas:combined_score': 'MF score',
-                     'alignment_scores:rate': "Alignment score"
-                     }, axis='columns')
+                     'alignment_scores:rate': "Alignment score"},axis='columns')
 
     PT_output = pd.ExcelWriter(
         "Final_Peak_Table_" + batch_name + ".xlsx", engine="openpyxl", mode="w"
@@ -231,6 +231,10 @@ def export_PT_noFC(
     heights.to_excel(PT_output, "Raw Peak Heights")
 
     PT_output.close()
+
+    return Key_data
+
+
 
 def export_fraction_PT(fraction_mods_filt: list, fraction_stats: pd.DataFrame, fraction_FC: pd.Series, g):
 
@@ -267,7 +271,15 @@ def export_fraction_PT(fraction_mods_filt: list, fraction_stats: pd.DataFrame, f
 
     PT_output.close()
 
-def export_fraction_PT_noFC(fraction_mods_filt: list, fraction_stats: pd.DataFrame, g, feature_group_size):
+    return Key_data
+
+def export_fraction_PT_noFC(
+        fraction_mods_filt: list,
+        fraction_stats: pd.DataFrame,
+        g,
+        feature_group_size,
+        fr_peak_quality_metrics
+):
 
     Key_data = pd.concat([(fraction_mods_filt[7])[["Level_of_ID", "mz", "rt", "feature_group"]],
                           feature_group_size,
@@ -276,7 +288,8 @@ def export_fraction_PT_noFC(fraction_mods_filt: list, fraction_stats: pd.DataFra
                           (fraction_mods_filt[0])[["compound_db_identity:compound_name", "compound_db_identity:mz_diff_ppm"]],
                           (fraction_mods_filt[2])[["formulas:formulas", "formulas:combined_score"]],
                           (fraction_mods_filt[3])[["alignment_scores:rate"]],
-                           fraction_stats],
+                           fraction_stats,
+                           fr_peak_quality_metrics],
                            axis=1,)
 
     Key_data = Key_data.rename({'ion_identities:ion_identities': "Adduct",

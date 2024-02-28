@@ -1,6 +1,8 @@
 #This workflow includes all four main sample types
 # Bio and Media (Blanks)
 # Media/Blank Subtraction implemented
+import pandas as pd
+
 from src.assign_global_variables import path, peaklist, Blank_identifier, QC_identifier
 from src.Avg_SD_RSD_calcs import avg_sd_rsd
 from src.Blank_Filtering import blank_filter
@@ -12,6 +14,7 @@ from src.get_group_heights import get_single_group_heights
 from src.ID_levels import ID_levels
 from src.MZMine3_columns import mzmine3_cols
 from src.MZMine3_module_divider import divide_mzmine3_table
+from src.plot_peak_quality import plot_fwhm, plot_asymmetry, plot_tailing
 from src.Plot_RSDs import plot_rsd_vs_rt
 from src.read_peak_table import read_mzmine3_peaktable
 from src.sample_names import get_sample_names
@@ -36,15 +39,38 @@ bio_stats = single_table_filt(blank_i_filt[0], bio_stats)
 media_stats = single_table_filt(blank_i_filt[0], media_stats)
 qc_stats = single_table_filt(blank_i_filt[0], qc_stats)
 mods_blank_filt = module_tables_filt(blank_i_filt[0], mods)
+heights = module_tables_filt(blank_i_filt[0], heights)
 
 #plot feature reproducibility across the run
 plot_rsd_vs_rt(bio_stats, media_stats, qc_stats, mods_blank_filt[7], show_plot=True)
+
+#plot peak quality across the run and histograms of their distributions
+fwhm = plot_fwhm(mods_blank_filt[8], mods_blank_filt[7], show_plot=True)
+asymmetry = plot_asymmetry(mods_blank_filt[9], mods_blank_filt[7], show_plot=True)
+tailing = plot_tailing(mods_blank_filt[10], mods_blank_filt[7], show_plot=True)
+
+#merge peak quality metrics
+peak_quality_metrics = (fwhm.merge(asymmetry, left_index=True, right_index=True)).merge(tailing, left_index=True, right_index=True)
+peak_quality_metrics = peak_quality_metrics.drop(columns=["rt_x", "rt_y", "rt"])
 
 #Add levels of ID
 ID_levels(mods_blank_filt)
 
 #Export peak table for the whole dataset
-export_PT_noFC(mods_blank_filt, bio_stats, media_stats, qc_stats, blank_stats, heights)
+export_PT_noFC(
+               mods_blank_filt,
+               bio_stats,
+               media_stats,
+               qc_stats,
+               blank_stats,
+               heights,
+               peak_quality_metrics
+               )
 
 #export sample specific tables
-fraction_filter_noFC(bio_stats, groups[4], mods_blank_filt)
+fraction_filter_noFC(
+                     bio_stats,
+                     groups[4],
+                     mods_blank_filt,
+                     peak_quality_metrics
+                     )
