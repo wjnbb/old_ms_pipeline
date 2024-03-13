@@ -62,3 +62,55 @@ def blank_filter(
     )
 
     return Blank_i_filt, blank_db_filt
+
+
+
+def blank_filter_binary(
+    Bio_stats: pd.DataFrame,
+    Blank_stats: pd.DataFrame,
+) -> list:
+    """
+        Takes the peak height stats (avg, sd, rsd) calculated for each sample group and identifies all feature rows for which no
+    biological, media or QC sample average height in the dataset exceeded a minimum FC as specified by the Blank_thresh
+    variable versus the average height of the blank samples and returns a list of the indices of those rows."
+    """
+
+    Bio_stats = Bio_stats[[s for s in Bio_stats.columns if "avg" in s]]
+    Bio_stats = Bio_stats.fillna(10)
+
+    Blank_stats["Blank_avg"] = Blank_stats["Blank_avg"].fillna(10)
+
+    B_FC_table = pd.DataFrame()
+
+    # calculate FC against the blank average for all bio,media and QC triplicates
+    for b in Bio_stats.columns:
+
+        bios = Bio_stats[[s for s in Bio_stats.columns if b in s]]
+        bios = bios.squeeze()
+        B_FC = bios / (Blank_stats["Blank_avg"].squeeze())
+        B_FC_table.insert(0, ("FC" + b), B_FC)
+
+    Blank_i_filt = []
+    blank_db_filt = []
+
+    #check if each row surpasses the required FC for blank filtering or not
+    for r in B_FC_table.index:
+
+        if np.nanmax((B_FC_table.loc[r, :])) >= Blank_thresh:
+
+            Blank_i_filt.append(r)
+
+        #line here to store peak IDs for blank origin peaks for cumulative DB storage
+        else:
+
+            blank_db_filt.append(r)
+
+    print("")
+    print("Blank threshold applied for filtering is " + str(Blank_thresh))
+    print(str(len(Blank_i_filt)) + " features left after blank filtering")
+    print(
+        str((len(Blank_i_filt) / len(Bio_stats)) * 100)
+        + " % of features left after blank filtering"
+    )
+
+    return Blank_i_filt, blank_db_filt

@@ -91,9 +91,17 @@ import plotly.express as px
 from src.assign_global_variables import path
 from src.ppm_calculator import ppm_calculator
 from src.feature_group_checker import feature_group_checker
-from src.plot_peak_quality import (plot_standards_fwhm,
-                                   plot_standards_asymmetry,
-                                   plot_standards_tailing)
+from src.plot_peak_quality import (
+    plot_standards_fwhm,
+    plot_standards_asymmetry,
+    plot_standards_tailing,
+    plot_standards_isotopes,
+    plot_standards_charge,
+    plot_standards_frag_scans,
+    plot_standards_ms2_apex_dist,
+    plot_standards_area,
+    plot_standards_height
+)
 import os
 
 def dil_series_analyser(standards, ppm:int, bio_stats):
@@ -307,18 +315,15 @@ def dil_series_analyser(standards, ppm:int, bio_stats):
     ms2_matches = pd.Series(ms2_matches).set_axis(major_ion_matches.index.values)
     compounds = pd.Series(compounds).set_axis(major_ion_matches.index.values)
 
-    major_ion_matches = pd.concat([major_ion_matches,
-                                    pd.Series(adduct_matches),
-                                    pd.Series(molecular_formula_matches),
-                                    pd.Series(ms1_matches),
-                                    pd.Series(ms2_matches)],
-                                    axis=1)
+    major_ion_matches = pd.concat([
+        major_ion_matches,
+        pd.Series(adduct_matches, name="Adduct Correct"),
+        pd.Series(molecular_formula_matches, name="MF Correct"),
+        pd.Series(ms1_matches, name="MS1 matches"),
+        pd.Series(ms2_matches, name="MS2 matches")
+        ],
+        axis=1)
 
-    #rename new columns
-    major_ion_matches.columns.values[16:20] = ["Adduct Correct",
-                                        "MF Correct",
-                                        "MS1 matches",
-                                        "MS2 matches"]
 
     #insert standard names in the first column position
     major_ion_matches.insert(loc=0,
@@ -332,6 +337,12 @@ def dil_series_analyser(standards, ppm:int, bio_stats):
     plot_standards_fwhm(major_ion_matches, show_plot=True)
     plot_standards_asymmetry(major_ion_matches, show_plot=True)
     plot_standards_tailing(major_ion_matches, show_plot=True)
+    plot_standards_isotopes(major_ion_matches, show_plot=True)
+    plot_standards_charge(major_ion_matches, show_plot=True)
+    plot_standards_frag_scans(major_ion_matches, show_plot=True)
+    plot_standards_ms2_apex_dist(major_ion_matches, show_plot=True)
+    plot_standards_area(major_ion_matches, show_plot=True)
+    plot_standards_height(major_ion_matches, show_plot=True)
 
     #Check the size of feature groups and percentage of adducts within that are related to the standard
     feature_group_checker(full_peak_table, fg_info, 5)
@@ -435,109 +446,6 @@ def dil_series_analyser(standards, ppm:int, bio_stats):
     dilution_series_df2 = dilution_series_df2.drop("Standard", axis=1)
 
     return fg_info
-
-# compounds2 = ["Chloramphenicol [M+Na]+",
-#               "Chloramphenicol [M+H]+",
-#               "Cycloheximide [M+H]+ R=3.7",
-#               "Hygromycin [M+2H]2+ RT=0.4",
-#               "Hygromycin [M+2H]2+ RT=0.7",
-#               "Hygromycin [M+H]+ RT=0.4",
-#               "Hygromycin [M+H]+ RT=0.7",
-#               "Imipenem [M+H]+ RT=1.5",
-#               "Imipenem [M+H]+ RT=2.3",
-#               "Imipenem [M+H]+ RT=2.5",
-#               "Imipenem [M+H]+ RT=2.6",
-#               "Neomycin B [M+H]+ RT=0.9",
-#               "Neomycin B [M+H]+ RT=1.6",
-#               "Neomycin B [M+H]+ RT=2.3",
-#               "Neomycin B [M+H]+ RT=2.4",
-#               "Nystatin [M+H]+",
-#               "Polymyxin B [M+3H]3+ RT=3.1",
-#               "Polymyxin B [M+3H]3+ RT=3.2",
-#               "Polymyxin B [M+3H]3+ RT=3.3",
-#               "Polymyxin B [M+3H]3+ RT=3.4",
-#               "Polymyxin B [M+3H]3+ RT=3.6",
-#               "Polymyxin B [M+3H]3+ RT=3.8",
-#               "Polymyxin B [M+H]+ RT=3.1",
-#               "Polymyxin B [M+H]+ RT=3.3",
-#               "Polymyxin B2 [M+3H]3+ RT=3.0",
-#               "Polymyxin B2 [M+3H]3+ RT=3.1",
-#               "Polymyxin B2 [M+3H]3+ RT=3.3",
-#               "Polymyxin B2 [M+3H]3+ RT=3.4",
-#               "Polymyxin B2 [M+3H]3+ RT=3.6",
-#               "Polymyxin B2 [M+3H]3+ RT=3.8",
-#               "Polymyxin B2 [M+H]+ RT=3.0",
-#               "Polymyxin B2 [M+H]+ RT=3.1",
-#               "Polymyxin B6 [M+3H]3+ RT=3.2",
-#               "Polymyxin B6 [M+H]+ RT=2.9",
-#               "Tetracycline [M+H]+ RT=3.2",
-#               "Tetracycline [M+H]+ RT=6.8",
-#               "Anhydrotetracycline [M+H]+ RT=3.1",
-#               "Anhydrotetracycline [M+H]+ RT=3.7",
-#               "Anhydrotetracycline [M+H]+ RT=3.9",
-#               "Oxytetracycline [M+H]+ RT=2.9",
-#               "Oxytetracycline [M+H]+ RT=3.1",
-#               "Oxytetracycline [M+H]+ RT=3.3",
-#               "Lincomycin [M+H]+ RT=2.8",
-#               "Paromomycin [M+H]+ RT=0.7",
-#               "Paromomycin [M+H]+ RT=0.8",
-#               "Paromomycin [M+H]+ RT=1.4",
-#               "Paromomycin [M+H]+ RT=2.2",
-#               "Paromomycin [M+H]+ RT=2.3",
-#               "Penicillin G [2M+Na]+ RT=4.0",
-#               "Penicillin G [M+H]+ RT=3.0",
-#               "Penicillin G [M+H]+ RT=3.4",
-#               "Penicillin G [M+H]+ RT=4.0",
-#               "Rifampicin [M+H]+ RT=4.8",
-#               "Vancomycin [M+2H]2+ RT=2.6",
-#               "Vancomycin [M+2H]2+ RT=2.8",
-#               "Vancomycin [M+H]+ RT=2.7",
-#               "Tobramycin [M+H]+ RT=0.4",
-#               "Tobramycin [M+H]+ RT=0.7",
-#               "Tobramycin [M+H]+ RT=0.8",
-#               "Tobramycin [M+H]+ RT=1.4",
-#               "Tobramycin [M+H]+ RT=2.2",
-#               "Tobramycin [M+H]+ RT=2.4",
-#               "Thiostrepton [M+2H]2+",
-#               "Thiostrepton [M+H]+"
-#               ]
-
-# compounds2 = ["Paromomycin [M+H]+ RT=0.4",
-#               "Paromomycin [M+H]+ RT=0.9",
-#               "Paromomycin [M+H]+ RT=2.1"]
-#
-# dilution_series_df2 = dilution_series_df2.set_axis(compounds2)
-#
-# test_df = dilution_series_df2.transpose()
-#
-# conc = [400, 200, 100, 50, 25, 12.5, 6.25, 3.13, 1.56, 0.78, 0.39]
-#
-# test_df.insert(loc=0,
-#                column="Concentration",
-#                value=conc)
-#
-# # test_df.columns[1:17] = compounds2
-#
-# test_df = test_df.fillna(0)
-#
-# import plotly.express as px
-#
-# #plot line graph of feature intensities across concentrations
-# fig = px.line(test_df,
-#               x=test_df.Concentration,
-#               y=test_df.columns[1:(len(test_df.columns))]
-#               )
-#
-# fig.update_xaxes(autorange="reversed")
-#
-# fig.update_layout(
-#     xaxis_title = "Concentration(µg/mL)",
-#     yaxis_title = "Average Peak Height",
-#     title = "Paromomycin in LM4",
-#     legend_title = "Feature ID"
-# )
-#
-# fig.write_html("Major Ions vs Concentration.html")
 
 
 

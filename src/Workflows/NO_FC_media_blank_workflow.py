@@ -14,7 +14,7 @@ from src.get_group_heights import get_single_group_heights
 from src.ID_levels import ID_levels
 from src.MZMine3_columns import mzmine3_cols
 from src.MZMine3_module_divider import divide_mzmine3_table
-from src.plot_peak_quality import plot_fwhm, plot_asymmetry, plot_tailing
+from src.plot_peak_quality import plot_fwhm, plot_asymmetry, plot_tailing, plot_isotopes
 from src.Plot_RSDs import plot_rsd_vs_rt
 from src.read_peak_table import read_mzmine3_peaktable
 from src.sample_names import get_sample_names
@@ -48,6 +48,7 @@ plot_rsd_vs_rt(bio_stats, media_stats, qc_stats, mods_blank_filt[7], show_plot=T
 fwhm = plot_fwhm(mods_blank_filt[8], mods_blank_filt[7], show_plot=True)
 asymmetry = plot_asymmetry(mods_blank_filt[9], mods_blank_filt[7], show_plot=True)
 tailing = plot_tailing(mods_blank_filt[10], mods_blank_filt[7], show_plot=True)
+isotopes = plot_isotopes(mods_blank_filt[12], True)
 
 #merge peak quality metrics
 peak_quality_metrics = (fwhm.merge(asymmetry, left_index=True, right_index=True)).merge(tailing, left_index=True, right_index=True)

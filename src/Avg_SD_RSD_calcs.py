@@ -38,9 +38,9 @@ def avg_sd_rsd(df: pd.DataFrame, groups: Union[list, str], grp_names: list):
             grp_rsd = (grp_sd / grp_avg) * 100
 
             # add the newly calculated stats to the stats table
-            all_stats.insert(0, (g + "avg"), grp_avg)
-            all_stats.insert(0, (g + "sd"), grp_sd)
-            all_stats.insert(0, (g + "rsd"), grp_rsd)
+            all_stats.insert(0, (g + "_avg"), grp_avg)
+            all_stats.insert(0, (g + "_sd"), grp_sd)
+            all_stats.insert(0, (g + "_rsd"), grp_rsd)
 
     else:
 
@@ -65,13 +65,69 @@ def avg_sd_rsd(df: pd.DataFrame, groups: Union[list, str], grp_names: list):
             all_stats.insert(0, "Blank_rsd", grp_rsd)
 
         if len([s for s in grp_names if Bio_identifier in s]) >= 1:
-            all_stats.insert(0, (groups + "avg"), grp_avg)
-            all_stats.insert(0, (groups + "sd"), grp_sd)
-            all_stats.insert(0, (groups + "rsd"), grp_rsd)
+            all_stats.insert(0, (groups + "_avg"), grp_avg)
+            all_stats.insert(0, (groups + "_sd"), grp_sd)
+            all_stats.insert(0, (groups + "_rsd"), grp_rsd)
 
         if len([s for s in grp_names if Media_identifier in s]) >= 1:
-            all_stats.insert(0, (groups + "avg"), grp_avg)
-            all_stats.insert(0, (groups + "sd"), grp_sd)
-            all_stats.insert(0, (groups + "rsd"), grp_rsd)
+            all_stats.insert(0, (groups + "_avg"), grp_avg)
+            all_stats.insert(0, (groups + "_sd"), grp_sd)
+            all_stats.insert(0, (groups + "_rsd"), grp_rsd)
+
+    return all_stats
+
+
+
+def avg_sd_rsd_binary(df: pd.DataFrame, groups: Union[list, str], grp_names: list):
+
+    # checks if the group is made of many subgroups each requiring their own average or if the group is all one
+
+    if isinstance(groups, list):
+
+        all_stats = pd.DataFrame()
+
+        for g in groups:
+
+
+            # get all columns for that biological group within the group
+            grp_cols = df[[s for s in df.columns if g in s]]
+
+            # calculate the peak height avg, sd and rsd for the current group
+            grp_avg = grp_cols.mean(axis=1)
+            grp_sd = grp_cols.std(axis=1)
+            grp_rsd = (grp_sd / grp_avg) * 100
+
+            if Bio_identifier not in grp_names == False:
+                all_stats.insert(0, "Blank_avg", grp_avg)
+                all_stats.insert(0, "Blank_sd", grp_sd)
+                all_stats.insert(0, "Blank_rsd", grp_rsd)
+                break
+
+            # add the newly calculated stats to the stats table
+            all_stats.insert(0, (g + "_avg"), grp_avg)
+            all_stats.insert(0, (g + "_sd"), grp_sd)
+            all_stats.insert(0, (g + "_rsd"), grp_rsd)
+
+
+
+    else:
+
+        # calculate the stats for the group if it is all one
+        all_stats = pd.DataFrame()
+
+        grp_avg = df.mean(axis=1)
+        grp_sd = df.std(axis=1)
+        grp_rsd = (grp_sd / grp_avg) * 100
+
+        if Bio_identifier not in grp_names:
+
+            all_stats.insert(0, "Blank_avg", grp_avg)
+            all_stats.insert(0, "Blank_sd", grp_sd)
+            all_stats.insert(0, "Blank_rsd", grp_rsd)
+
+        if len([s for s in grp_names if Bio_identifier in s]) >= 1:
+            all_stats.insert(0, (groups + "_avg"), grp_avg)
+            all_stats.insert(0, (groups + "_sd"), grp_sd)
+            all_stats.insert(0, (groups + "_rsd"), grp_rsd)
 
     return all_stats

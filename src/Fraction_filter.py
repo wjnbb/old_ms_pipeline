@@ -97,27 +97,38 @@ def fraction_filter_noFC(
         peak_quality_metrics:pd.DataFrame
 ):
 
-    #print("")
-    #print("RSD threshold applied is " + str(RSD_threshold))
-    #print("Peak height threshold applied is " + str(peak_height_threshold))
-    #print("")
-
     for g in active_groups:
 
         fraction_peaks = list()
 
         for i in Bio_stats.index:
 
-            if (Bio_stats.loc[i, (g + "rsd")] <= RSD_threshold) & \
-                    (Bio_stats.loc[i, (g + "avg")] >= peak_height_threshold):
+            if (Bio_stats.loc[i, (g + "_rsd")] <= RSD_threshold) & \
+                    (Bio_stats.loc[i, (g + "_avg")] >= peak_height_threshold) & \
+                    (peak_quality_metrics.loc[i, "Isotopes"] > 0) & \
+                    (peak_quality_metrics.loc[i, "Charge"] > 0) & \
+                    (peak_quality_metrics.loc[i, "Number of Aligned Features"] >= 3):
 
-                fraction_peaks.append(i)
+                peak_check_count = 0
+
+                if 0.05 <= peak_quality_metrics.loc[i, "FWHM"] <= 0.2:
+                    peak_check_count = peak_check_count + 1
+                if 0.5 <= peak_quality_metrics.loc[i, "asymmetry_factor"] <= 3.0:
+                    peak_check_count = peak_check_count + 1
+                if 0.5 <= peak_quality_metrics.loc[i, "tailing_factor"] <= 3.0:
+                    peak_check_count = peak_check_count + 1
+                if 0.75 <= peak_quality_metrics.loc[i, "Weighted Distance Score"] < 1.0:
+                    peak_check_count = peak_check_count + 1
+
+                if peak_check_count >= 2:
+                    fraction_peaks.append(i)
+
 
         fraction_stats = single_table_filt(fraction_peaks, Bio_stats)
         fraction_mods_filt = module_tables_filt(fraction_peaks, Mods_filt)
 
-        #print("")
-        #print(str(len(fraction_peaks)) + " features meet the filtering criteria in " + str(g))
+        print("")
+        print(str(len(fraction_peaks)) + " features meet the filtering criteria in " + str(g))
 
         #get summary peak info for further filtering to make output simpler, only report 1 feature per feature group
         peak_info = fraction_mods_filt[7]

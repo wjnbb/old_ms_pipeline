@@ -43,6 +43,11 @@ def divide_mzmine3_table(peak_table: pd.DataFrame, pt_cols: list):
     fwhm_df = sample_data[(s for s in sample_cols if s.endswith(":fwhm"))]
     asymmetry_df = sample_data[(s for s in sample_cols if s.endswith(":asymmetry_factor"))]
     tailing_df = sample_data[(s for s in sample_cols if s.endswith(":tailing_factor"))]
+    charge_df = sample_data[(s for s in sample_cols if s.endswith(":charge"))]
+    isotopes_df = sample_data[(s for s in sample_cols if s.endswith(":isotopes"))]
+    area_df = sample_data[(s for s in sample_cols if s.endswith(":area"))]
+    frag_scans_df = sample_data[(s for s in sample_cols if s.endswith(":fragment_scans"))]
+    ms2_apex_dist_df = sample_data[(s for s in sample_cols if s.endswith(":rt_ms2_apex_distance"))]
 
     print("\ncompleted MZMine3 peak table dividing")
 
@@ -57,5 +62,10 @@ def divide_mzmine3_table(peak_table: pd.DataFrame, pt_cols: list):
         aligned_feature_info,
         fwhm_df,
         asymmetry_df,
-        tailing_df
+        tailing_df,
+        charge_df,
+        isotopes_df,
+        area_df,
+        frag_scans_df,
+        ms2_apex_dist_df
     )

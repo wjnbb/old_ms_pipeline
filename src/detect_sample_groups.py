@@ -7,6 +7,36 @@ from src.assign_global_variables import (
     QC_identifier,
 )
 
+def detect_sample_groups_binary(sample_names: list):
+
+    # get all biological sample names from list of sample names
+    if (len([s for s in sample_names if Bio_identifier in s])) >= 1:
+
+        Bio = np.unique([s for s in sample_names if Bio_identifier in s]).tolist()
+        print("\nFirst ten biological samples names are...")
+        print(Bio[0:9])
+        print("Number of Biological samples found = " + str(len(Bio)))
+        Bio_groups = np.unique([b.split("_R")[0] for b in Bio]).tolist()
+        print(Bio_groups[0:10])
+        print("Number of Biological groups found = " + str(len(Bio_groups)))
+    else:
+        Bio = []
+        Bio_groups = []
+        print("\nNo biological samples present")
+
+    if (len([s for s in sample_names if Bio_identifier not in s])) >= 1:
+
+        print("Blank samples found")
+        Blanks = np.unique([s for s in sample_names if Bio_identifier not in s]).tolist()
+        print("\nFirst ten blank samples names are...")
+        print(Blanks[0:9])
+        print("Number of blank samples found = " + str(len(Blanks)))
+        Blank_groups = np.unique([b.split("_R")[0] for b in Blanks]).tolist()
+
+        return Bio, Blanks, Bio_groups, Blank_groups
+
+
+
 
 def detect_sample_groups(sample_names: list):
 
@@ -27,7 +57,7 @@ def detect_sample_groups(sample_names: list):
         print("\nFirst ten biological samples names are...")
         print(Bio[0:9])
         print("Number of Biological samples found = " + str(len(Bio)))
-        Bio_groups = np.unique([b.split("rep")[0] for b in Bio]).tolist()
+        Bio_groups = np.unique([b.split("_R")[0] for b in Bio]).tolist()
         print(Bio_groups[0:10])
         print("Number of Biological groups found = " + str(len(Bio_groups)))
     else:
@@ -42,7 +72,7 @@ def detect_sample_groups(sample_names: list):
         print("\nFirst ten media/control samples names are...")
         print(Media[0:9])
         print("Number of Media/control samples found = " + str(len(Media)))
-        Media_groups = np.unique([b.split("rep")[0] for b in Media]).tolist()
+        Media_groups = np.unique([b.split("_R")[0] for b in Media]).tolist()
         print(Media_groups[0:10])
         print("Number of Media groups found = " + str(len(Media_groups)))
 

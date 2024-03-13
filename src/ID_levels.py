@@ -70,11 +70,11 @@ def ID_levels(Mods_filt: list):
 
     #ID_level
 
-    print("")
-    print(str(ID_level.count("Level 2")) + " level 2 annotations assigned")
-    print(str(ID_level.count("Level 3")) + " level 3 annotations assigned")
-    print(str(ID_level.count("Level 4")) + " level 4 annotations assigned")
-    print(str(ID_level.count("Level 5")) + " level 5 annotations assigned")
+    #print("")
+    #print(str(ID_level.count("Level 2")) + " level 2 annotations assigned")
+    #print(str(ID_level.count("Level 3")) + " level 3 annotations assigned")
+    #print(str(ID_level.count("Level 4")) + " level 4 annotations assigned")
+    #print(str(ID_level.count("Level 5")) + " level 5 annotations assigned")
 
     (Mods_filt[7]).insert(loc=0, column="Level_of_ID", value=ID_level)
 

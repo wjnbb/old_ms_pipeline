@@ -1,9 +1,9 @@
-path = "C:/Users/WilliamNash/Bactobio Dropbox/Baccuico/LAB Work/Lab Work - Will/AC003_DataFiltering/FG_investigation_results/output_0.5_0.9_0.9/"
-batch_name = "output_0.5_0.9_0.9"
+path = "C:/Users/WilliamNash/Bactobio Dropbox/Baccuico/LAB Work/Lab Work - Will/Mass_spec_data/20240109_Set1and2mix_LM2/MZMine3_Filtering1/"
+batch_name = "20240109_Set1and2mix_LM2"
 MS_system = "Agilent"
-peaklist = "output_0.5_0.9_0.9.csv"
+peaklist = "peaklist.csv"
 Bio_identifier = "Set"
-Media_identifier = "Media"
+Media_identifier = "dnadjslaj"
 Blank_identifier = "Blank"
 QC_identifier = "QC"
 Blank_thresh = 10
