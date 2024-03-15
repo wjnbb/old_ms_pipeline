@@ -85,10 +85,6 @@ def fraction_filter(Bio_stats: pd.DataFrame, active_groups: list, FC_Stats: pd.D
 
             export_fraction_PT(fraction_mods_filt, fraction_stats, fraction_FC, g)
 
-# Bio_stats = bio_stats
-# active_groups = groups[4]
-# Mods_filt = mods_blank_filt
-
 
 def fraction_filter_noFC(
         Bio_stats: pd.DataFrame,
@@ -104,10 +100,12 @@ def fraction_filter_noFC(
         for i in Bio_stats.index:
 
             if (Bio_stats.loc[i, (g + "_rsd")] <= RSD_threshold) & \
-                    (Bio_stats.loc[i, (g + "_avg")] >= peak_height_threshold) & \
-                    (peak_quality_metrics.loc[i, "Isotopes"] > 0) & \
-                    (peak_quality_metrics.loc[i, "Charge"] > 0) & \
-                    (peak_quality_metrics.loc[i, "Number of Aligned Features"] >= 3):
+                (Bio_stats.loc[i, (g + "_avg")] >= peak_height_threshold) & \
+                (peak_quality_metrics.loc[i, "Isotopes"] > 0) & \
+                (peak_quality_metrics.loc[i, "Charge"] > 0) & \
+                ((peak_quality_metrics.loc[i, "Number of Aligned Features"]) +
+                 (peak_quality_metrics.loc[i, "Align Extra Features Number"]) >= 3):
+
 
                 peak_check_count = 0
 
@@ -121,14 +119,18 @@ def fraction_filter_noFC(
                     peak_check_count = peak_check_count + 1
 
                 if peak_check_count >= 2:
+                    #print(f"peak id {i} passes filtering criteria")
                     fraction_peaks.append(i)
+
+            else:
+                continue
 
 
         fraction_stats = single_table_filt(fraction_peaks, Bio_stats)
         fraction_mods_filt = module_tables_filt(fraction_peaks, Mods_filt)
 
         print("")
-        print(str(len(fraction_peaks)) + " features meet the filtering criteria in " + str(g))
+        print(str(len(fraction_peaks)) + " features meet the peak quality filtering criteria in " + str(g))
 
         #get summary peak info for further filtering to make output simpler, only report 1 feature per feature group
         peak_info = fraction_mods_filt[7]
@@ -161,7 +163,9 @@ def fraction_filter_noFC(
 
             for feature in feature_group_info.index:
 
-                if ((feature_group_info.loc[feature, "ion_identities:ion_identities"] == "[M+H]+") | (feature_group_info.loc[feature, "ion_identities:ion_identities"] == "[M+Na]+") | (feature_group_info.loc[feature, "ion_identities:ion_identities"] == "[M+2H]2+")):
+                if ((feature_group_info.loc[feature, "ion_identities:ion_identities"] == "[M+H]+") |
+                        (feature_group_info.loc[feature, "ion_identities:ion_identities"] == "[M+Na]+") |
+                        (feature_group_info.loc[feature, "ion_identities:ion_identities"] == "[M+2H]2+")):
 
                     filtered_features.append(feature)
                     feature_group_size.append(len(feature_group_info))
@@ -176,7 +180,7 @@ def fraction_filter_noFC(
                     filtered_features.append(feature)
                     feature_group_size.append(len(feature_group_info))
 
-        #print(f"{len(filtered_features)} features meet the feature group filtering criteria in {g}")
+        print(f"{len(filtered_features)} features meet the feature group filtering criteria in {g}")
 
         feature_group_size = pd.Series(feature_group_size)
 

@@ -201,7 +201,13 @@ def export_PT_noFC(
                     "compound_db_identity:mz_diff_ppm",
                 ]
             ],
-            (module_tables[2])[["formulas:formulas", "formulas:combined_score"]],
+            (module_tables[4])[[
+                "ion_identities:iin_id",
+                "ion_identities:consensus_formulas",
+                "ion_identities:combined_score",
+                "ion_identities:mz_diff_ppm",
+                "ion_identities:neutral_mass"
+            ]],
             peak_quality_metrics,
             avg_height],
         axis=1,
@@ -213,8 +219,12 @@ def export_PT_noFC(
         'spectral_db_matches:cosine_score': "MS2 cosine score",
         'compound_db_identity:compound_name': "MS1 match",
         'compound_db_identity:mz_diff_ppm': "MS1 ppm error",
-        'formulas:formulas': 'Predicted MF',
-        'formulas:combined_score': 'MF score'
+        'ion_identities:consensus_formulas': 'Predicted MF',
+        'ion_identities:combined_score': 'MF score',
+        "ion_identities:mz_diff_ppm": "MF ppm error",
+        "ion_identities:neutral_mass": "Neutral Mass",
+        "ion_identities:iin_id": "Sub-Feature Group ID",
+
     },
        axis='columns'
     )
@@ -283,26 +293,54 @@ def export_fraction_PT_noFC(
         fr_peak_quality_metrics
 ):
 
-    Key_data = pd.concat([(fraction_mods_filt[7])[["Level_of_ID", "mz", "rt", "feature_group"]],
-                          feature_group_size,
-                          (fraction_mods_filt[4])[["ion_identities:ion_identities"]],
-                          (fraction_mods_filt[1])[["spectral_db_matches:compound_name", "spectral_db_matches:cosine_score"]],
-                          (fraction_mods_filt[0])[["compound_db_identity:compound_name", "compound_db_identity:mz_diff_ppm"]],
-                          (fraction_mods_filt[2])[["formulas:formulas", "formulas:combined_score"]],
-                           fraction_stats,
-                           fr_peak_quality_metrics],
-                           axis=1,)
+    Key_data = pd.concat(
+         [(fraction_mods_filt[7])[[
+             "Level_of_ID",
+             "mz",
+             "rt",
+             "feature_group"
+         ]],
+          feature_group_size,
+          (fraction_mods_filt[4])[[
+                "ion_identities:ion_identities",
+                "ion_identities:iin_id",
+          ]],
+          (fraction_mods_filt[1])[[
+              "spectral_db_matches:compound_name",
+              "spectral_db_matches:cosine_score"
+          ]],
+          (fraction_mods_filt[0])[[
+              "compound_db_identity:compound_name",
+              "compound_db_identity:mz_diff_ppm"
+          ]],
+          (fraction_mods_filt[4])[[
+              "ion_identities:consensus_formulas",
+              "ion_identities:combined_score",
+              "ion_identities:mz_diff_ppm",
+              "ion_identities:neutral_mass"
+          ]],
+          fraction_stats,
+          fr_peak_quality_metrics
+          ],
+         axis=1,
+    )
 
-    Key_data = Key_data.rename({'ion_identities:ion_identities': "Adduct",
-                                'spectral_db_matches:compound_name': "MS2 match",
-                                'spectral_db_matches:cosine_score': "MS2 cosine score",
-                                'compound_db_identity:compound_name': "MS1 match",
-                                'compound_db_identity:mz_diff_ppm': "MS1 ppm error",
-                                'formulas:formulas': 'Predicted MF',
-                                'formulas:combined_score': 'MF score',
-                                }, axis='columns')
+    Key_data = Key_data.rename({
+        'ion_identities:ion_identities': "Adduct",
+        'spectral_db_matches:compound_name': "MS2 match",
+        'spectral_db_matches:cosine_score': "MS2 cosine score",
+        'compound_db_identity:compound_name': "MS1 match",
+        'compound_db_identity:mz_diff_ppm': "MS1 ppm error",
+        'ion_identities:consensus_formulas': 'Predicted MF',
+        'ion_identities:combined_score': 'MF score',
+        "ion_identities:mz_diff_ppm": "MF ppm error",
+        "ion_identities:neutral_mass": "Neutral Mass",
+        "ion_identities:iin_id": "Sub-Feature Group ID"
+        },
+        axis='columns'
+    )
 
-    mapping = {Key_data.columns[4]: 'Feature_group_size', Key_data.columns[12]: 'RSD', Key_data.columns[13]: 'SD', Key_data.columns[14]: 'Avg Height'}
+    mapping = {Key_data.columns[4]: 'Feature_group_size', Key_data.columns[15]: 'RSD', Key_data.columns[16]: 'SD', Key_data.columns[17]: 'Avg Height'}
     Key_data = Key_data.rename(columns=mapping)
 
     Key_data = Key_data.sort_values(by = ['Avg Height'], ascending=False)

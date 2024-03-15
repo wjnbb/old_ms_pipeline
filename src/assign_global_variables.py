@@ -1,10 +1,10 @@
-path = "C:/Users/WilliamNash/Bactobio Dropbox/Baccuico/LAB Work/Lab Work - Will/Mass_spec_data/20240109_Set1and2mix_LM2/MZMine3_Filtering1/"
-batch_name = "20240109_Set1and2mix_LM2"
+path = "C:/Users/WilliamNash/Bactobio Dropbox/Baccuico/LAB Work/Lab - MS data/2024/2024_Q1/20240219_BH30_Biotage fractions/Fraction2_LM3/MZMine3/"
+batch_name = "Fraction2_LM3"
 MS_system = "Agilent"
 peaklist = "peaklist.csv"
-Bio_identifier = "Set"
+Bio_identifier = "BH30"
 Media_identifier = "dnadjslaj"
-Blank_identifier = "Blank"
+Blank_identifier = "media"
 QC_identifier = "QC"
 Blank_thresh = 10
 FC_threshold = 10

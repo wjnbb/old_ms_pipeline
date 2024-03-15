@@ -260,9 +260,9 @@ def plot_charge(
     avg_charge = avg_charge.fillna(0)
 
     # make a new directory to store graphs in
-    if not os.path.exists(path + "peak_quality_plots/all_filtered_peaks/"):
+    if not os.path.exists(path + "peak_quality_plots/"):
 
-        os.mkdir(path + "peak_quality_plots/all_filtered_peaks/")
+        os.mkdir(path + "peak_quality_plots/")
 
     fig = px.histogram(
                        avg_charge,
@@ -273,7 +273,7 @@ def plot_charge(
     if show_plot:
         fig.show()
 
-    fig.write_html(path + "peak_quality_plots/all_filtered_peaks/average_charge_histogram.html")
+    fig.write_html(path + "peak_quality_plots/average_charge_histogram.html")
 
     return avg_charge
 
@@ -320,9 +320,9 @@ def plot_fwhm(
     avg_peak_quality.columns.values[0] = "FWHM"
 
     # make a new directory to store graphs in
-    if not os.path.exists(path + "peak_quality_plots/all_filtered_peaks/"):
+    if not os.path.exists(path + "peak_quality_plots/"):
 
-        os.mkdir(path + "peak_quality_plots/all_filtered_peaks/")
+        os.mkdir(path + "peak_quality_plots/")
 
     fig = px.scatter(
                      avg_peak_quality,
@@ -335,7 +335,7 @@ def plot_fwhm(
 
         fig.show()
 
-    fig.write_html(path + "peak_quality_plots/all_filtered_peaks/average_FWHM_vs_RT.html")
+    fig.write_html(path + "peak_quality_plots/average_FWHM_vs_RT.html")
 
     fig = px.histogram(
                        avg_peak_quality,
@@ -346,7 +346,7 @@ def plot_fwhm(
     if show_plot:
         fig.show()
 
-    fig.write_html(path + "peak_quality_plots/all_filtered_peaks/average_FWHM_histogram.html")
+    fig.write_html(path + "peak_quality_plots/average_FWHM_histogram.html")
 
     return avg_peak_quality
 
@@ -368,9 +368,9 @@ def plot_asymmetry(
     avg_peak_quality.columns.values[0] = "asymmetry_factor"
 
     # make a new directory to store graphs in
-    if not os.path.exists(path + "peak_quality_plots/all_filtered_peaks/"):
+    if not os.path.exists(path + "peak_quality_plots/"):
 
-        os.mkdir(path + "peak_quality_plots/all_filtered_peaks/")
+        os.mkdir(path + "peak_quality_plots/")
 
     fig = px.scatter(
                      avg_peak_quality,
@@ -394,7 +394,7 @@ def plot_asymmetry(
     if show_plot == True:
         fig.show()
 
-    fig.write_html(path + "peak_quality_plots//all_filtered_peaks/average_asymmetry_factor_histogram.html")
+    fig.write_html(path + "peak_quality_plots/average_asymmetry_factor_histogram.html")
 
     return avg_peak_quality
 
@@ -415,7 +415,7 @@ def plot_tailing(
     avg_peak_quality.columns.values[0] = "tailing_factor"
 
     # make a new directory to store graphs in
-    if not os.path.exists(path + "peak_quality_plots/all_filtered_peaks/"):
+    if not os.path.exists(path + "peak_quality_plots/"):
 
         os.mkdir(path + "peak_quality_plots/")
 
@@ -430,7 +430,7 @@ def plot_tailing(
 
         fig.show()
 
-    fig.write_html(path + "peak_quality_plots/all_filtered_peaks/average_tailing_factor_vs_RT.html")
+    fig.write_html(path + "peak_quality_plots/average_tailing_factor_vs_RT.html")
 
     fig = px.histogram(
                        avg_peak_quality,
@@ -442,7 +442,7 @@ def plot_tailing(
 
         fig.show()
 
-    fig.write_html(path + "peak_quality_plots/all_filtered_peaks/average_tailing_factor_histogram.html")
+    fig.write_html(path + "peak_quality_plots/average_tailing_factor_histogram.html")
 
     return avg_peak_quality
 
